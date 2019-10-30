@@ -1,0 +1,29 @@
+{
+  "name": "amp-email-reference-implementation",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0",
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "test": "ava -v"
+  },
+  "alias": {
+    "@ampproject/email-viewer": ".."
+  },
+  "devDependencies": {
+    "ava": "^2.4.0",
+    "puppeteer": "^2.0.0"
+  },
+  "ava": {
+    "require": [
+      "./test/_setup-puppeteer.js"
+    ],
+    "babel": false,
+    "files": [
+      "test/*.test.js"
+    ]
+  }
+}

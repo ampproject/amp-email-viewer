@@ -1,0 +1,13 @@
+{
+  "trailingComma": "es5",
+  "bracketSpacing": false,
+  "quoteProps": "preserve",
+  "parser": "typescript",
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": [".prettierrc", "*.json"],
+      "options": { "parser": "json" }
+    }
+  ]
+}
