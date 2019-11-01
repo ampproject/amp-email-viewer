@@ -56,5 +56,8 @@
     "files": [
       "out/test/**/*.test.js"
     ]
+  },
+  "dependencies": {
+    "@ampproject/viewer-messaging": "^1.1.0"
   }
 }
