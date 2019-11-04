@@ -25,5 +25,9 @@
     "files": [
       "test/*.test.js"
     ]
-  }
+  },
+  "//": "To make it easier to run Puppeteer without needing regeneratorRuntime",
+  "browserslist": [
+    "last 1 Chrome versions"
+  ]
 }

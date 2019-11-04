@@ -2,11 +2,21 @@ const express = require('express');
 const Bundler = require('parcel-bundler');
 const modules = require('./server-modules');
 
+/** @const {string} */
 const PARCEL_ENTRY_POINT = 'frontend/index.html';
+
+/** @const {Object} */
 const DEFAULT_PARCEL_OPTIONS = {
   autoInstall: false,
 };
 
+/**
+ * Starts the server.
+ *
+ * @param {number} port Port to listen on
+ * @param {Object=} options Additional parameters for express and parcel
+ * @return {Promise<void>} Resolves when the server starts
+ */
 async function start(port, {hostname, parcelOptions = {}} = {}) {
   return new Promise(resolve => {
     const app = express();
