@@ -1,1 +1,1 @@
-export {FrameContainer} from './framecontainer/FrameContainer';
+export { FrameContainer } from './framecontainer/FrameContainer';

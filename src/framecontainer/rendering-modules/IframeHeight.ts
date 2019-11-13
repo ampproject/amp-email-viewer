@@ -1,5 +1,5 @@
-import {FrameContainer} from '../FrameContainer';
-import {Messaging} from '@ampproject/viewer-messaging';
+import { FrameContainer } from '../FrameContainer';
+import { Messaging } from '@ampproject/viewer-messaging';
 
 class IframeHeightImpl {
   private iframe: HTMLIFrameElement;
@@ -10,16 +10,19 @@ class IframeHeightImpl {
     this.messaging = frameContainer.getMessaging();
   }
 
-  public start(): void {
-    this.messaging.registerHandler('documentHeight', this.documentHeightHandler);
+  start(): void {
+    this.messaging.registerHandler(
+      'documentHeight',
+      this.documentHeightHandler
+    );
   }
 
   private documentHeightHandler = (
     name: string,
-    data: any,
+    data: { height: number },
     rsvp: boolean
   ): Promise<void> => {
-    this.iframe.setAttribute('height', data.height);
+    this.iframe.setAttribute('height', String(data.height));
     return Promise.resolve();
   };
 }
@@ -29,7 +32,7 @@ function load(frameContainer: FrameContainer) {
   impl.start();
 }
 
-export default {
+export const module = {
   name: 'IframeHeight',
-  load
+  load,
 };

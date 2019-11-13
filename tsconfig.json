@@ -1,18 +1,11 @@
 {
-  "compileOnSave": true,
+  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "lib": ["es2017", "dom"],
     "outDir": "out",
-    "sourceMap": true,
     "moduleResolution": "node",
-    "target": "esnext",
-    "allowJs": false,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "incremental": true
+    "target": "ESNext",
+    "module": "ESNext"
   },
   "include": ["src/**/*.ts"]
 }

@@ -10,15 +10,19 @@
     "esmodules": "dist/viewer.mjs"
   },
   "scripts": {
-    "build": "npm run tsc && npm run rollup",
+    "build": "npm run compile && npm run rollup",
     "rollup": "rollup -c",
     "server": "npm run build && cd example && node index.js",
-    "test:server": "npm run build && cd example && npm test",
-    "test:unit": "npm run tsc && ava -v",
+    "test:server": "cd example && npm test",
+    "test:unit": "ava -v",
     "test": "npm run test:unit && npm run test:server",
-    "tsc": "tsc -p tsconfig.json",
+    "compile": "tsc -p tsconfig.json",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "prettier": "prettier -c '**/*.{ts,js,json}'"
+    "check": "gts check",
+    "clean": "gts clean",
+    "fix": "gts fix",
+    "pretest": "npm run build",
+    "posttest": "npm run check"
   },
   "keywords": [],
   "author": "The AMP HTML Authors",
@@ -39,7 +43,8 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-terser": "^5.1.2",
     "tslint": "^5.20.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.6.4",
+    "gts": "^1.1.0"
   },
   "engines": {
     "node": ">=10.16"

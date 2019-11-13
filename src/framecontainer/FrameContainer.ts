@@ -1,23 +1,20 @@
-import {createIframe} from './createIframe';
-import {appendParametersToURL} from './viewerParameters';
+import { createIframe } from './createIframe';
+import { appendParametersToURL } from './viewerParameters';
 import * as config from './config';
-import {Messaging} from '@ampproject/viewer-messaging';
-import renderingModules from './rendering-modules/index';
+import { Messaging } from '@ampproject/viewer-messaging';
+import { modules as renderingModules } from './rendering-modules/index';
 
 export class FrameContainer {
   private parent: HTMLElement;
-  private iframe: HTMLIFrameElement;
-  private messaging: Messaging;
   private relayPage: string;
   private targetOrigin: string;
   private messagingToken: string;
   private renderingModules: Set<string>;
 
-  constructor(
-    parent: HTMLElement,
-    relayPage: string,
-    targetOrigin: string = 'null'
-  ) {
+  private iframe: HTMLIFrameElement | null = null;
+  private messaging: Messaging | null = null;
+
+  constructor(parent: HTMLElement, relayPage: string, targetOrigin = 'null') {
     this.parent = parent;
     this.relayPage = relayPage;
     this.targetOrigin = targetOrigin;
@@ -36,10 +33,16 @@ export class FrameContainer {
   }
 
   getIframe(): HTMLIFrameElement {
+    if (!this.iframe) {
+      throw new Error('iframe not initialized yet');
+    }
     return this.iframe;
   }
 
   getMessaging(): Messaging {
+    if (!this.messaging) {
+      throw new Error('Messaging not initialized yet');
+    }
     return this.messaging;
   }
 
@@ -64,17 +67,17 @@ export class FrameContainer {
 
   private async waitForIframeLoad(): Promise<void> {
     return new Promise(resolve => {
-      this.iframe.addEventListener('load', () => resolve());
+      this.iframe!.addEventListener('load', () => resolve());
     });
   }
 
   private async injectAMP(amp: string) {
     await this.waitForIframeLoad();
-    this.iframe!.contentWindow!.postMessage({amp}, '*');
+    this.iframe!.contentWindow!.postMessage({ amp }, '*');
   }
 
   private async startMessaging(): Promise<void> {
-    const target = this.iframe.contentWindow!;
+    const target = this.iframe!.contentWindow!;
     const messaging = await Messaging.waitForHandshakeFromDocument(
       window,
       target,
@@ -82,7 +85,7 @@ export class FrameContainer {
       this.messagingToken
     );
     this.messaging = messaging;
-    this.messaging.setDefaultHandler(this.messageHandler as any);
+    this.messaging.setDefaultHandler(this.messageHandler);
     this.loadRenderingModules();
     this.messaging.sendRequest('visibilitychange', {}, true);
   }
@@ -95,8 +98,9 @@ export class FrameContainer {
     }
   }
 
-  private messageHandler = (name: string, data: any, rsvp: boolean) => {
+  private messageHandler = (name: string, data: {}, rsvp: boolean) => {
     console.log(`Received message: ${name}`);
+    return Promise.resolve();
   };
 
   private getIframeSandbox(): string[] {
@@ -120,7 +124,7 @@ export class FrameContainer {
   private generateMessagingToken(): string {
     const bytes = new Uint8Array(32);
     window.crypto.getRandomValues(bytes);
-    const bytesStr = String.fromCharCode.apply(null, bytes);
+    const bytesStr = String.fromCharCode.apply(null, Array.from(bytes));
     return btoa(bytesStr);
   }
 }

@@ -1,4 +1,5 @@
+// tslint:disable:ban-ts-ignore
 // @ts-ignore
-import browserEnv from 'browser-env';
+import browserEnv = require('browser-env');
 
 browserEnv();

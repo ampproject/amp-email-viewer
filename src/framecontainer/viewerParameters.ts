@@ -61,6 +61,7 @@ function parametersToString(parameters: ViewerParameters): string {
   const output = [];
   for (const key of Object.keys(parameters)) {
     // cast to 'any' to allow [] access
+    // tslint:disable:no-any
     let value = (parameters as any)[key];
     if (typeof value === 'undefined') {
       continue;
