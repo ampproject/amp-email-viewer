@@ -1,8 +1,10 @@
 import test from 'ava';
+import { JSDOM } from 'jsdom';
 
 import { createIframe } from '../../framecontainer/createIframe';
 
 test('createIframe() creates iframe', t => {
+  const { document } = new JSDOM('').window;
   const div = document.createElement('div');
   document.body.appendChild(div);
   const iframe = createIframe(div, {

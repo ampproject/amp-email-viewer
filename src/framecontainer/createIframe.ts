@@ -13,7 +13,8 @@ export function createIframe(
   parent: HTMLElement,
   options: IframeOptions
 ): HTMLIFrameElement {
-  const iframe: HTMLIFrameElement = document.createElement('iframe');
+  const doc = parent.ownerDocument;
+  const iframe: HTMLIFrameElement = doc!.createElement('iframe');
 
   if (options.width) {
     iframe.setAttribute('width', options.width);
