@@ -1,6 +1,7 @@
-import compiler from '@ampproject/rollup-plugin-closure-compiler';
-import {terser} from 'rollup-plugin-terser';
 import babel from 'rollup-plugin-babel';
+import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import resolve from 'rollup-plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 
 const BABEL_PLUGINS = [['@babel/proposal-class-properties']];
 const BABEL_EXCLUDES = 'node_modules/**';
@@ -9,7 +10,7 @@ const BABEL_IIFE_PRESETS = [
   [
     '@babel/env',
     {
-      targets: {browsers: ['last 2 versions', 'ie >= 11', 'safari >= 7']},
+      targets: { browsers: ['last 2 versions', 'ie >= 11', 'safari >= 7'] },
       loose: false,
       modules: false,
     },
@@ -25,6 +26,9 @@ const IIFE = {
     name: 'AMPEmail',
   },
   plugins: [
+    resolve({
+      modulesOnly: true,
+    }),
     babel({
       exclude: BABEL_EXCLUDES,
       presets: BABEL_IIFE_PRESETS,
@@ -39,7 +43,7 @@ const BABEL_MODULE_PRESETS = [
   [
     '@babel/env',
     {
-      targets: {esmodules: true},
+      targets: { esmodules: true },
       loose: true,
       modules: false,
     },
@@ -54,6 +58,9 @@ const ESModule = {
     sourcemap: true,
   },
   plugins: [
+    resolve({
+      modulesOnly: true,
+    }),
     babel({
       exclude: BABEL_EXCLUDES,
       presets: BABEL_MODULE_PRESETS,

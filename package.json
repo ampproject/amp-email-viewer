@@ -10,15 +10,19 @@
     "esmodules": "dist/viewer.mjs"
   },
   "scripts": {
-    "build": "npm run tsc && npm run rollup",
+    "build": "npm run compile && npm run rollup",
     "rollup": "rollup -c",
     "server": "npm run build && cd example && node index.js",
-    "test:server": "npm run build && cd example && npm test",
-    "test:unit": "npm run tsc && ava -v",
+    "test:server": "cd example && npm test",
+    "test:unit": "ava -v",
     "test": "npm run test:unit && npm run test:server",
-    "tsc": "tsc -p tsconfig.json",
+    "compile": "tsc -p tsconfig.json",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "prettier": "prettier -c '**/*.{ts,js,json}'"
+    "check": "gts check",
+    "clean": "gts clean",
+    "fix": "gts fix",
+    "pretest": "npm run build",
+    "posttest": "npm run check"
   },
   "keywords": [],
   "author": "The AMP HTML Authors",
@@ -32,12 +36,17 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.3",
+    "@types/jsdom": "^12.2.4",
+    "@types/sinon": "^7.5.0",
     "ava": "^2.4.0",
-    "browser-env": "^3.2.6",
+    "gts": "^1.1.0",
+    "jsdom": "^15.2.1",
     "prettier": "^1.18.2",
     "rollup": "^1.26.0",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.2",
+    "sinon": "^7.5.0",
     "tslint": "^5.20.0",
     "typescript": "^3.6.4"
   },
@@ -49,12 +58,14 @@
   },
   "ava": {
     "require": [
-      "esm",
-      "./out/test/_setup-browser-env.js"
+      "esm"
     ],
     "babel": false,
     "files": [
       "out/test/**/*.test.js"
     ]
+  },
+  "dependencies": {
+    "@ampproject/viewer-messaging": "^1.1.0"
   }
 }
