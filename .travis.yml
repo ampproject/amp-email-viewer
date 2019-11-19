@@ -1,0 +1,9 @@
+language: node_js
+os: linux
+node_js:
+  - "lts/*"
+before_install:
+  - unset _JAVA_OPTIONS  # JVM heap sizes break closure compiler
+install:
+  - npm install
+  - npm install --prefix ./example
