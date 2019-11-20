@@ -9,6 +9,14 @@ interface IframeOptions {
   styles?: string[] | string;
 }
 
+/**
+ * Creates an iframe element with the provided options that includes sandbox
+ * attributes, feature policy and styles.
+ *
+ * @param {HTMLElement} parent Element to create an iframe inside of
+ * @param {IframeOptions} options Options used for the iframe
+ * @return {HTMLIFrameElement} Newly created iframe element
+ */
 export function createIframe(
   parent: HTMLElement,
   options: IframeOptions

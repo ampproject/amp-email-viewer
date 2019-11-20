@@ -1,6 +1,10 @@
 import { FrameContainer } from '../FrameContainer';
 import { Messaging } from '@ampproject/viewer-messaging';
 
+/**
+ * Reacts to changes to the AMP document's height and resizes the iframe to
+ * adjust to them.
+ */
 class IframeHeightImpl {
   private iframe: HTMLIFrameElement;
   private messaging: Messaging;
