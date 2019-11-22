@@ -1,7 +1,11 @@
-import {FrameContainer} from '@ampproject/email-viewer/dist/viewer.mjs';
+import { FrameContainer } from '@ampproject/email-viewer/dist/viewer.mjs';
 
 const container = document.querySelector('#viewer');
-const viewer = new FrameContainer(container, '/modules/bootstrap-page');
+const viewer = new FrameContainer(container, {
+  relayPage: new URL('/modules/bootstrap-page', document.baseURI).href,
+  useOpaqueOrigin: true,
+  imageProxyURL: new URL('/modules/image-proxy', document.baseURI).href,
+});
 viewer.render(`<!doctype html>
 <html ⚡4email allow-xhr-interception allow-viewer-render-template report-errors-to-viewer>
 <head>
