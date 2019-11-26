@@ -125,7 +125,7 @@ export class FrameContainer {
       },
       viewerConfig.VIEWER_PARAMETERS
     );
-    return appendParametersToURL(this.config.relayPage, params);
+    return appendParametersToURL(this.config.relayPageURL, params);
   }
 
   private generateMessagingToken(): string {
@@ -139,6 +139,6 @@ export class FrameContainer {
     if (this.config.useOpaqueOrigin) {
       return 'null';
     }
-    return new URL(this.config.relayPage).origin;
+    return new URL(this.config.relayPageURL).origin;
   }
 }

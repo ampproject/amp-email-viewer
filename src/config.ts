@@ -6,7 +6,7 @@ export interface Config {
    * URL of the relay page that's the src of the iframe and that receives the
    * AMP code.
    */
-  relayPage: string;
+  relayPageURL: string;
 
   /**
    * Whether to render the AMP page in an opaque origin iframe.
@@ -57,7 +57,7 @@ export function validateConfig(config: any): config is Config {
   if (typeof config !== 'object') {
     return false;
   }
-  if (!isURL(config.relayPage)) {
+  if (!isURL(config.relayPageURL)) {
     return false;
   }
   if (typeof config.useOpaqueOrigin !== 'boolean') {

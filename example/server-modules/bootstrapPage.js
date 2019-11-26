@@ -6,14 +6,14 @@ const crypto = require('crypto');
  *
  * @const {string}
  */
-const HOST_ORIGIN = 'http://localhost:3000';
+const {HOST_ORIGIN} = process.env;
 
 /**
  * Host of the server that used to proxy images (image proxy module).
  *
  * @const {string}
  */
-const IMAGE_PROXY_ORIGIN = 'http://localhost:3000';
+const {IMAGE_PROXY_ORIGIN} = process.env;
 
 /**
  * JS source code of the bootstrap page.
