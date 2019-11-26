@@ -1,30 +1,33 @@
 import { createIframe } from './createIframe';
 import { appendParametersToURL } from './viewerParameters';
-import * as config from './config';
+import * as viewerConfig from './viewerConfig';
 import { Messaging } from '@ampproject/viewer-messaging';
 import { modules as renderingModules } from './rendering-modules/index';
+import { Config } from '../config';
 
 export class FrameContainer {
-  private parent: HTMLElement;
-  private relayPage: string;
-  private targetOrigin: string;
-  private messagingToken: string;
-  private renderingModules: Set<string>;
+  private readonly parent: HTMLElement;
+  private readonly config: Config;
+  private readonly targetOrigin: string;
+  private readonly messagingToken: string;
+  private readonly renderingModules: Set<string>;
 
   private iframe: HTMLIFrameElement | null = null;
   private messaging: Messaging | null = null;
 
-  constructor(parent: HTMLElement, relayPage: string, targetOrigin = 'null') {
+  constructor(parent: HTMLElement, config: Config) {
     this.parent = parent;
-    this.relayPage = relayPage;
-    this.targetOrigin = targetOrigin;
+    this.config = config;
+    this.targetOrigin = this.getTargetOrigin();
     this.messagingToken = this.generateMessagingToken();
-    this.renderingModules = new Set(config.DEFAULT_RENDERING_MODULES);
+    this.renderingModules = new Set(viewerConfig.DEFAULT_RENDERING_MODULES);
   }
 
   async render(amp: string): Promise<void> {
     if (this.iframe) {
       this.parent.removeChild(this.iframe);
+      this.iframe = null;
+      this.messaging = null;
     }
 
     this.createViewerIframe();
@@ -46,6 +49,10 @@ export class FrameContainer {
     return this.messaging;
   }
 
+  getConfig(): Config {
+    return this.config;
+  }
+
   enableRenderingModule(module: string) {
     this.renderingModules.add(module);
   }
@@ -59,9 +66,9 @@ export class FrameContainer {
       src: this.getIframeSrc(),
       width: '100%',
       height: '1',
-      featurePolicy: config.IFRAME_FEATURE_POLICY,
+      featurePolicy: viewerConfig.IFRAME_FEATURE_POLICY,
       sandbox: this.getIframeSandbox(),
-      styles: config.IFRAME_STYLES,
+      styles: viewerConfig.IFRAME_STYLES,
     });
   }
 
@@ -104,10 +111,10 @@ export class FrameContainer {
   };
 
   private getIframeSandbox(): string[] {
-    if (this.targetOrigin === 'null') {
-      return config.IFRAME_SANDBOX;
+    if (this.config.useOpaqueOrigin) {
+      return viewerConfig.IFRAME_SANDBOX;
     }
-    return config.IFRAME_SANDBOX.concat('allow-same-origin');
+    return viewerConfig.IFRAME_SANDBOX.concat('allow-same-origin');
   }
 
   private getIframeSrc(): string {
@@ -116,9 +123,9 @@ export class FrameContainer {
         origin: window.location.origin,
         messagingToken: this.messagingToken,
       },
-      config.VIEWER_PARAMETERS
+      viewerConfig.VIEWER_PARAMETERS
     );
-    return appendParametersToURL(this.relayPage, params);
+    return appendParametersToURL(this.config.relayPageURL, params);
   }
 
   private generateMessagingToken(): string {
@@ -126,5 +133,12 @@ export class FrameContainer {
     window.crypto.getRandomValues(bytes);
     const bytesStr = String.fromCharCode.apply(null, Array.from(bytes));
     return btoa(bytesStr);
+  }
+
+  private getTargetOrigin() {
+    if (this.config.useOpaqueOrigin) {
+      return 'null';
+    }
+    return new URL(this.config.relayPageURL).origin;
   }
 }

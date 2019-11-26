@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const Bundler = require('parcel-bundler');
 const modules = require('./server-modules');
