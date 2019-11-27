@@ -5,7 +5,7 @@ const IFRAME_SELECTOR = '#viewer > iframe';
  * it (if provided).
  *
  * @param {string=} code AMP code to inject and render
- * @return {Object} Whether the content type is accepted
+ * @return {!Object} Whether the content type is accepted
  */
 async function loadAMP(code = '') {
   await page.evaluateOnNewDocument(code => {

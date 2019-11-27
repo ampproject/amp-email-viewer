@@ -16,7 +16,7 @@ const DEFAULT_PARCEL_OPTIONS = {
  *
  * @param {number} port Port to listen on
  * @param {Object=} options Additional parameters for express and parcel
- * @return {Promise<http.Server>} Resolves when the server starts
+ * @return {!Promise<http.Server>} Resolves when the server starts
  */
 async function start(port, { hostname, parcelOptions = {} } = {}) {
   return new Promise(resolve => {

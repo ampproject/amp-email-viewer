@@ -6,12 +6,8 @@ import { modules as renderingModules } from './rendering-modules/index';
 import { Config } from '../config';
 
 /**
- * Creates an iframe element with the provided options that includes sandbox
- * attributes, feature policy and styles.
- *
- * @param {HTMLElement} parent Element to create an iframe inside of
- * @param {IframeOptions} options Options used for the iframe
- * @return {HTMLIFrameElement} Newly created iframe element
+ * Creates an iframe that can render an AMP document, connects it with viewer
+ * messaging and loads the rendering modules.
  */
 export class FrameContainer {
   private readonly parent: HTMLElement;
@@ -24,8 +20,8 @@ export class FrameContainer {
   private messaging: Messaging | null = null;
 
   /**
-   * @param {HTMLElement} parent Element to create an iframe inside of
-   * @param {Config} config Config with parameters related to the AMP viewer
+   * @param {!HTMLElement} parent Element to create an iframe inside of
+   * @param {!Config} config Config with parameters related to the AMP viewer
    */
   constructor(parent: HTMLElement, config: Config) {
     this.parent = parent;
@@ -39,7 +35,7 @@ export class FrameContainer {
    * Renders the provided AMP code inside the frame container.
    *
    * @param {string} amp AMP code to display
-   * @return {Promise} Resolves when rendered
+   * @return {!Promise} Resolves when rendered
    */
   async render(amp: string): Promise<void> {
     if (this.iframe) {
@@ -56,7 +52,7 @@ export class FrameContainer {
   /**
    * Returns the iframe element that contains an AMP page.
    *
-   * @return {HTMLIFrameElement}
+   * @return {!HTMLIFrameElement}
    */
   getIframe(): HTMLIFrameElement {
     if (!this.iframe) {
@@ -68,7 +64,7 @@ export class FrameContainer {
   /**
    * Returns the Messaging object used to communicate with the AMP page.
    *
-   * @return {Messaging}
+   * @return {!Messaging}
    */
   getMessaging(): Messaging {
     if (!this.messaging) {
@@ -80,7 +76,7 @@ export class FrameContainer {
   /**
    * Returns the Config.
    *
-   * @return {Config}
+   * @return {!Config}
    */
   getConfig(): Config {
     return this.config;
