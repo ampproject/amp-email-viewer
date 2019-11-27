@@ -14,7 +14,7 @@
     "rollup": "rollup -c",
     "server": "npm run build && cd example && node index.js",
     "test:server": "cd example && npm test",
-    "test:unit": "ava -v",
+    "test:unit": "jest",
     "test": "npm run test:unit && npm run test:server",
     "compile": "tsc -p tsconfig.json",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
@@ -36,34 +36,22 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.3",
+    "@types/jest": "^24.0.23",
     "@types/jsdom": "^12.2.4",
-    "@types/sinon": "^7.5.0",
-    "ava": "^2.4.0",
     "gts": "^1.1.0",
+    "jest": "^24.9.0",
     "jsdom": "^15.2.1",
     "prettier": "^1.18.2",
     "rollup": "^1.26.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.2",
-    "sinon": "^7.5.0",
+    "ts-jest": "^24.1.0",
     "tslint": "^5.20.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.7.2"
   },
   "engines": {
     "node": ">=10.16"
-  },
-  "esm": {
-    "cjs": true
-  },
-  "ava": {
-    "require": [
-      "esm"
-    ],
-    "babel": false,
-    "files": [
-      "out/test/**/*.test.js"
-    ]
   },
   "dependencies": {
     "@ampproject/viewer-messaging": "^1.1.0"

@@ -16,9 +16,9 @@ const DEFAULT_PARCEL_OPTIONS = {
  *
  * @param {number} port Port to listen on
  * @param {Object=} options Additional parameters for express and parcel
- * @return {Promise<void>} Resolves when the server starts
+ * @return {!Promise<http.Server>} Resolves when the server starts
  */
-async function start(port, {hostname, parcelOptions = {}} = {}) {
+async function start(port, { hostname, parcelOptions = {} } = {}) {
   return new Promise(resolve => {
     const app = express();
 
@@ -29,8 +29,8 @@ async function start(port, {hostname, parcelOptions = {}} = {}) {
 
     app.use(bundler.middleware());
 
-    app.listen(port, hostname, () => resolve());
+    const server = app.listen(port, hostname, () => resolve(server));
   });
 }
 
-module.exports = {start};
+module.exports = { start };

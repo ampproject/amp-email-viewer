@@ -1,3 +1,8 @@
+/**
+ * Parameters allowed by the AMP Viewer API.
+ *
+ * @see {@link https://github.com/ampproject/amphtml/blob/master/extensions/amp-viewer-integration/amp-doc-viewer-api.md}
+ */
 export interface ViewerParameters {
   cap?: ViewerCapability[];
   origin?: string;
@@ -21,6 +26,11 @@ export interface ViewerParameters {
   visibilityState?: ViewerVisibilityState;
 }
 
+/**
+ * AMP Viewer capabilities that can be specified in the `cap` parameter.
+ *
+ * @see {@link https://github.com/ampproject/amphtml/blob/master/extensions/amp-viewer-integration/CAPABILITIES.md}
+ */
 export enum ViewerCapability {
   A2A = 'a2a',
   CLIENT_ID_SERVICE = 'cid',
@@ -34,11 +44,19 @@ export enum ViewerCapability {
   XHR_INTERCEPTOR = 'xhrInterceptor',
 }
 
+/**
+ * AMP Viewer viewport types that can be specified in the `viewportType`
+ * parameter.
+ */
 export enum ViewerViewportType {
   NATURAL = 'natural',
   NATURAL_IOS_EMBED = 'natural-ios-embed',
 }
 
+/**
+ * AMP Viewer visibility states that can be specified in the `visibilityState`
+ * parameter.
+ */
 export enum ViewerVisibilityState {
   INACTIVE = 'inactive',
   PAUSED = 'paused',
@@ -47,6 +65,17 @@ export enum ViewerVisibilityState {
   HIDDEN = 'hidden',
 }
 
+/**
+ * AMP Viewer parameters are provided as a query string that follows a fragment
+ * identifier (#). For example, https://amp.example/page.html#foo=1&bar=2
+ *
+ * This function appends the given parameters in the correct format to an
+ * existing URL.
+ *
+ * @param {string} url URL to append parameters to
+ * @param {ViewerParameters=} parameters Viewer parameters to append
+ * @return {string} URL with appended parameters
+ */
 export function appendParametersToURL(
   url: string,
   parameters?: ViewerParameters

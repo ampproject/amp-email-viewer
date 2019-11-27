@@ -5,6 +5,10 @@ import { Messaging } from '@ampproject/viewer-messaging';
 import { modules as renderingModules } from './rendering-modules/index';
 import { Config } from '../config';
 
+/**
+ * Creates an iframe that can render an AMP document, connects it with viewer
+ * messaging and loads the rendering modules.
+ */
 export class FrameContainer {
   private readonly parent: HTMLElement;
   private readonly config: Config;
@@ -15,6 +19,10 @@ export class FrameContainer {
   private iframe: HTMLIFrameElement | null = null;
   private messaging: Messaging | null = null;
 
+  /**
+   * @param {!HTMLElement} parent Element to create an iframe inside of
+   * @param {!Config} config Config with parameters related to the AMP viewer
+   */
   constructor(parent: HTMLElement, config: Config) {
     this.parent = parent;
     this.config = config;
@@ -23,6 +31,12 @@ export class FrameContainer {
     this.renderingModules = new Set(viewerConfig.DEFAULT_RENDERING_MODULES);
   }
 
+  /**
+   * Renders the provided AMP code inside the frame container.
+   *
+   * @param {string} amp AMP code to display
+   * @return {!Promise} Resolves when rendered
+   */
   async render(amp: string): Promise<void> {
     if (this.iframe) {
       this.parent.removeChild(this.iframe);
@@ -35,6 +49,11 @@ export class FrameContainer {
     await this.startMessaging();
   }
 
+  /**
+   * Returns the iframe element that contains an AMP page.
+   *
+   * @return {!HTMLIFrameElement}
+   */
   getIframe(): HTMLIFrameElement {
     if (!this.iframe) {
       throw new Error('iframe not initialized yet');
@@ -42,6 +61,11 @@ export class FrameContainer {
     return this.iframe;
   }
 
+  /**
+   * Returns the Messaging object used to communicate with the AMP page.
+   *
+   * @return {!Messaging}
+   */
   getMessaging(): Messaging {
     if (!this.messaging) {
       throw new Error('Messaging not initialized yet');
@@ -49,14 +73,29 @@ export class FrameContainer {
     return this.messaging;
   }
 
+  /**
+   * Returns the Config.
+   *
+   * @return {!Config}
+   */
   getConfig(): Config {
     return this.config;
   }
 
+  /**
+   * Enables the given rendering module. Must be called before render.
+   *
+   * @param {string} module Name of module to enable
+   */
   enableRenderingModule(module: string) {
     this.renderingModules.add(module);
   }
 
+  /**
+   * Disables the given rendering module. Must be called before render.
+   *
+   * @param {string} module Name of module to disable
+   */
   disableRenderingModule(module: string) {
     this.renderingModules.delete(module);
   }

@@ -1,16 +1,13 @@
-import test from 'ava';
-import * as sinon from 'sinon';
-
 import { module as IframeHeight } from '../../../framecontainer/rendering-modules/IframeHeight';
 
-test('IframeHeight resizes iframe', async t => {
-  t.assert(IframeHeight.name === 'IframeHeight');
+test('IframeHeight resizes iframe', async () => {
+  expect(IframeHeight.name).toBe('IframeHeight');
 
   const iframe = {
-    setAttribute: sinon.spy(),
+    setAttribute: jest.fn(),
   };
   const messaging = {
-    registerHandler: sinon.spy(),
+    registerHandler: jest.fn(),
   };
   const frameContainer = {
     getIframe: () => iframe,
@@ -19,8 +16,8 @@ test('IframeHeight resizes iframe', async t => {
 
   // tslint:disable:no-any
   IframeHeight.load(frameContainer as any);
-  t.assert(messaging.registerHandler.calledWith('documentHeight'));
-  const handler = messaging.registerHandler.lastCall.args[1];
+  expect(messaging.registerHandler.mock.calls[0][0]).toBe('documentHeight');
+  const handler = messaging.registerHandler.mock.calls[0][1];
   handler('documentHeight', { height: 20 }, false);
-  t.assert(iframe.setAttribute.calledWithExactly('height', '20'));
+  expect(iframe.setAttribute.mock.calls[0]).toEqual(['height', '20']);
 });
