@@ -8,7 +8,7 @@ const IFRAME_SELECTOR = '#viewer > iframe';
  * @return {Object} Whether the content type is accepted
  */
 async function loadAMP(code = '') {
-  await page.evaluateOnNewDocument((code) => {
+  await page.evaluateOnNewDocument(code => {
     window.ampCode = code;
   }, code);
   await page.goto('http://localhost:3000');

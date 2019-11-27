@@ -1,6 +1,8 @@
 import { FrameContainer } from '@ampproject/email-viewer/dist/viewer.mjs';
 
-window.ampCode = window.ampCode || `<!doctype html>
+window.ampCode =
+  window.ampCode ||
+  `<!DOCTYPE html>
 <html ⚡4email allow-xhr-interception allow-viewer-render-template report-errors-to-viewer>
 <head>
   <meta charset="utf-8">

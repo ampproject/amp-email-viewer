@@ -6,14 +6,14 @@ const crypto = require('crypto');
  *
  * @const {string}
  */
-const {HOST_ORIGIN} = process.env;
+const { HOST_ORIGIN } = process.env;
 
 /**
  * Host of the server that used to proxy images (image proxy module).
  *
  * @const {string}
  */
-const {IMAGE_PROXY_ORIGIN} = process.env;
+const { IMAGE_PROXY_ORIGIN } = process.env;
 
 /**
  * JS source code of the bootstrap page.
@@ -73,5 +73,5 @@ function generateCSPHash(input) {
  * @return {string} HTML code
  */
 function generateHTMLFromJS(js) {
-  return `<!doctype html><meta charset="utf-8"><script>${js}</script>`;
+  return `<!DOCTYPE html><meta charset="utf-8"><script>${js}</script>`;
 }

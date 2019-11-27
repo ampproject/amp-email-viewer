@@ -18,7 +18,7 @@ const DEFAULT_PARCEL_OPTIONS = {
  * @param {Object=} options Additional parameters for express and parcel
  * @return {Promise<http.Server>} Resolves when the server starts
  */
-async function start(port, {hostname, parcelOptions = {}} = {}) {
+async function start(port, { hostname, parcelOptions = {} } = {}) {
   return new Promise(resolve => {
     const app = express();
 
@@ -33,4 +33,4 @@ async function start(port, {hostname, parcelOptions = {}} = {}) {
   });
 }
 
-module.exports = {start};
+module.exports = { start };

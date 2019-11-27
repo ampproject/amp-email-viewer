@@ -1,7 +1,7 @@
-const {loadAMP} = require('./util/loader');
+const { loadAMP } = require('./util/loader');
 
 test('AMP iframe uses CSP', async () => {
-  const {page, iframe} = await loadAMP();
+  const { page, iframe } = await loadAMP();
   await page.setRequestInterception(true);
   page.on('request', req => {
     expect(req.url().startsWith('https://evil.example/')).toBeFalsy();
