@@ -1,4 +1,5 @@
 import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
 import compiler from '@ampproject/rollup-plugin-closure-compiler';
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
@@ -26,9 +27,8 @@ const IIFE = {
     name: 'AMPEmail',
   },
   plugins: [
-    resolve({
-      modulesOnly: true,
-    }),
+    resolve(),
+    commonjs(),
     babel({
       exclude: BABEL_EXCLUDES,
       presets: BABEL_IIFE_PRESETS,
@@ -58,9 +58,8 @@ const ESModule = {
     sourcemap: true,
   },
   plugins: [
-    resolve({
-      modulesOnly: true,
-    }),
+    resolve(),
+    commonjs(),
     babel({
       exclude: BABEL_EXCLUDES,
       presets: BABEL_MODULE_PRESETS,

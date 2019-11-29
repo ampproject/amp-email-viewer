@@ -2,8 +2,12 @@
 
 These modules are responsible for processing and validating the AMP code before
 it's displayed inside the viewer.
+<<<<<<< HEAD
 
 ## Validate AMP module
+=======
+## Validator module
+>>>>>>> css module
 
 This module runs the [AMP validator](https://www.npmjs.com/package/amphtml-validator)
 on the AMP code to ensure it's compliant with the requirements for the
@@ -103,3 +107,7 @@ Rewrites all image URLs (`amp-img` and `amp-anim` tags) with URLs of the image
 proxy.
 
 Only active when `imageProxyURL` is set in the global config.
+
+## CSS module
+
+(TODO)
