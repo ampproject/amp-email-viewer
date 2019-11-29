@@ -96,3 +96,10 @@ This module checks if the current browser version is recent enough to support
 important web features required to safely render AMP emails. Because CSP support
 can't be detected using normal feature detection, this module relies on the user
 agent to determine if these features are supported.
+
+## Image URL rewrite
+
+Rewrites all image URLs (`amp-img` and `amp-anim` tags) with URLs of the image
+proxy.
+
+Only active when `imageProxyURL` is set in the global config.
