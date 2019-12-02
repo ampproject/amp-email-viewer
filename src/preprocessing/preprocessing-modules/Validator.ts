@@ -34,7 +34,7 @@ async function process(amp: string, config: Config): Promise<string> {
 }
 
 /**
- * Downloads and loads validator.js is it's not already loaded.
+ * Downloads and loads validator.js if it's not already loaded.
  *
  * @return {!Promise<Validator>} Validator object
  */
