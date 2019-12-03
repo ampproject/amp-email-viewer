@@ -20,27 +20,36 @@ function process(amp: string, config: Config): string {
   const doc = parseHTML(amp);
   const images = doc.querySelectorAll(IMAGE_ELEMENT_SELECTOR);
   for (const img of Array.from(images)) {
-    rewriteImageURL(img, config.imageProxyURL);
+    const src = img.getAttribute('src');
+    if (!src) {
+      continue;
+    }
+    img.setAttribute('src', rewriteImageURL(src, config.imageProxyURL));
   }
   return serializeHTML(doc);
 }
 
 /**
- * Rewrites the src attribute of the given element to use the given proxy URL.
+ * Rewrites the image URL attribute to use the given proxy URL.
  *
- * @param {!Element} img HTML element to rewrite src of
+ * @param {string} url Image URL to rewrite
  * @param {string} proxy URL of proxy server, with %s as placeholder
  */
-function rewriteImageURL(img: Element, proxy: string): void {
+export function rewriteImageURL(url: string, proxy: string): string {
+  // return empty string if the URL is not valid
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'https:') {
+      return '';
+    }
+  } catch (e) {
+    return '';
+  }
+
   if (proxy.indexOf('%s') === -1) {
     throw new Error('Invalid proxy URL, no placeholder found');
   }
-  const url = img.getAttribute('src');
-  if (!url) {
-    return;
-  }
-  const proxiedURL = proxy.replace('%s', encodeURIComponent(url));
-  img.setAttribute('src', proxiedURL);
+  return proxy.replace('%s', encodeURIComponent(url));
 }
 
 export const module = {
