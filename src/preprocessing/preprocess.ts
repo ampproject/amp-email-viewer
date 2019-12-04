@@ -11,12 +11,11 @@ import { modules as preprocessingModules } from './preprocessing-modules/index';
  */
 export async function preprocessAMP(
   amp: string,
-  config: Config,
-  modules?: string[]
+  config: Config
 ): Promise<string> {
-  const moduleSet = new Set(modules || []);
+  const moduleSet = new Set(config.skipPreprocessingModules || []);
   for (const module of preprocessingModules) {
-    if (modules && !moduleSet.has(module.name)) {
+    if (preprocessingModules && !moduleSet.has(module.name)) {
       continue;
     }
     amp = await module.process(amp, config);
