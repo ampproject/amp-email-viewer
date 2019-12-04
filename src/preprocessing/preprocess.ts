@@ -13,9 +13,9 @@ export async function preprocessAMP(
   amp: string,
   config: Config
 ): Promise<string> {
-  const moduleSet = new Set(config.skipPreprocessingModules || []);
+  const skipSet = new Set(config.skipPreprocessingModules || []);
   for (const module of preprocessingModules) {
-    if (preprocessingModules && !moduleSet.has(module.name)) {
+    if (skipSet.has(module.name)) {
       continue;
     }
     amp = await module.process(amp, config);

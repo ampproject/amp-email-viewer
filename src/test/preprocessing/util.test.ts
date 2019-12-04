@@ -1,13 +1,4 @@
 import { parseHTML, serializeHTML } from '../../preprocessing/util';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      DOMParser: typeof DOMParser;
-    }
-  }
-}
 
 describe('preprocessing util', () => {
   const html = `<!DOCTYPE html>
@@ -18,15 +9,6 @@ describe('preprocessing util', () => {
 <img src="something.jpg">
 
 </body></html>`;
-
-  beforeAll(() => {
-    const dom = new JSDOM();
-    global.DOMParser = dom.window.DOMParser;
-  });
-
-  afterAll(() => {
-    delete global.DOMParser;
-  });
 
   test('parseHTML returns DOM', () => {
     const parsed = parseHTML(html);
