@@ -2,6 +2,7 @@ import { Config } from '../../config';
 import { parseHTML, serializeHTML } from '../util';
 
 const IMAGE_ELEMENT_SELECTOR = 'amp-img,amp-anim';
+const MUSTACHE_TEMPLATE_REGEX = /^{{\s*[\w\.]+\s*}}$/;
 
 /**
  * Rewrites all images (amp-img and amp-anim) to use the proxy server from the
@@ -21,7 +22,7 @@ function process(amp: string, config: Config): string {
   const images = doc.querySelectorAll(IMAGE_ELEMENT_SELECTOR);
   for (const img of Array.from(images)) {
     const src = img.getAttribute('src');
-    if (!src) {
+    if (!src || src.match(MUSTACHE_TEMPLATE_REGEX)) {
       continue;
     }
     img.setAttribute('src', rewriteImageURL(src, config.imageProxyURL));
