@@ -5,4 +5,6 @@ interface PreprocessingModule {
   process: (amp: string, config: Config) => string | Promise<string>;
 }
 
-export const modules: PreprocessingModule[] = [];
+import { module as Validator } from './Validator';
+
+export const modules: PreprocessingModule[] = [Validator];

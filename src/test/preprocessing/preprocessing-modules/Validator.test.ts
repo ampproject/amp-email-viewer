@@ -1,32 +1,8 @@
 import { module as Validator } from '../../../preprocessing/preprocessing-modules/Validator';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      window: Window;
-      document: Document;
-    }
-  }
-}
 
 describe('Validator module', () => {
   // tslint:disable:no-any
   const config = {} as any;
-
-  beforeAll(() => {
-    const dom = new JSDOM('', {
-      runScripts: 'dangerously',
-      resources: 'usable',
-    });
-    global.window = dom.window;
-    global.document = dom.window.document;
-  });
-
-  afterAll(() => {
-    delete global.window;
-    delete global.document;
-  });
 
   test('has correct name', () => {
     expect(Validator.name).toBe('Validator');
