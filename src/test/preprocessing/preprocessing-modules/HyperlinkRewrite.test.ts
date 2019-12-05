@@ -1,24 +1,6 @@
 import { module as HyperlinkRewrite } from '../../../preprocessing/preprocessing-modules/HyperlinkRewrite';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      DOMParser: typeof DOMParser;
-    }
-  }
-}
 
 describe('HyperlinkRewrite module', () => {
-  beforeAll(() => {
-    const dom = new JSDOM();
-    global.DOMParser = dom.window.DOMParser;
-  });
-
-  afterAll(() => {
-    delete global.DOMParser;
-  });
-
   test('has correct name', () => {
     expect(HyperlinkRewrite.name).toBe('HyperlinkRewrite');
   });
