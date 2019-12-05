@@ -1,29 +1,8 @@
 import { module as HeadTag } from '../../../preprocessing/preprocessing-modules/HeadTag';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      document: Document;
-      DOMParser: typeof DOMParser;
-    }
-  }
-}
 
 describe('HeadTag module', () => {
   // tslint:disable:no-any
   const config = {} as any;
-
-  beforeAll(() => {
-    const dom = new JSDOM();
-    global.document = dom.window.document;
-    global.DOMParser = dom.window.DOMParser;
-  });
-
-  afterAll(() => {
-    delete global.document;
-    delete global.DOMParser;
-  });
 
   test('has correct name', () => {
     expect(HeadTag.name).toBe('HeadTag');
