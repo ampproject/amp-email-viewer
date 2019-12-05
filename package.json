@@ -37,7 +37,8 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.3",
     "@types/amphtml-validator": "^1.0.1",
-    "@types/css-tree": "^1.0.1",
+    "@rollup/plugin-json": "^4.0.0",
+    "@types/css-tree": "^1.0.2",
     "@types/jest": "^24.0.23",
     "gts": "^1.1.0",
     "jest": "^24.9.0",
@@ -58,6 +59,6 @@
   "dependencies": {
     "@ampproject/viewer-messaging": "^1.1.0",
     "bowser": "^2.7.0",
-    "css-tree": "^1.0.0-alpha.38"
+    "css-tree": "^1.0.0-alpha.39"
   }
 }

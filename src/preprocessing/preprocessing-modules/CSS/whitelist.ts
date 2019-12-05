@@ -57,7 +57,7 @@ export const ALLOWED_TRANSITIONS = new Set([
 
 export const ALLOWED_URL_PROPERTIES = new Set([
   'background',
-  'background-color',
+  'background-image',
 ]);
 
 export const ALLOWED_PROPERTIES = new Set([

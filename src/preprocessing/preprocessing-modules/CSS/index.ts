@@ -12,12 +12,11 @@ import {
 
 // placeholder: use function from ImageProxy module
 function rewriteImageURL(url: string, proxy: string): string {
-  return url;
+  return 'https://placeholder.example/';
 }
 
 const CUSTOM_STYLES_SELECTOR = 'style[amp-custom]';
-
-const URL_FUNC_REGEX = /\burl\(['"]?([^)]+?)['"]?\)/i;
+const INLINE_STYLES_SELECTOR = '[style]';
 
 /**
  * Parses the CSS of the AMP document.
@@ -29,9 +28,16 @@ const URL_FUNC_REGEX = /\burl\(['"]?([^)]+?)['"]?\)/i;
 function process(amp: string, config: Config): string {
   const doc = parseHTML(amp);
 
+  processStyleTag(doc, config);
+  processInlineStyles(doc, config);
+
+  return serializeHTML(doc);
+}
+
+function processStyleTag(doc: HTMLDocument, config: Config) {
   const styleTag = doc.querySelector(CUSTOM_STYLES_SELECTOR);
   if (!styleTag || !styleTag.textContent) {
-    return amp;
+    return;
   }
 
   const ast = csstree.parse(styleTag.textContent);
@@ -45,8 +51,28 @@ function process(amp: string, config: Config): string {
     parseURLs(ast, config.imageProxyURL);
   }
   styleTag.textContent = csstree.generate(ast);
+}
 
-  return serializeHTML(doc);
+function processInlineStyles(doc: HTMLDocument, config: Config) {
+  const tagsWithStyle = doc.querySelectorAll(INLINE_STYLES_SELECTOR);
+  if (!tagsWithStyle || tagsWithStyle.length === 0) {
+    return;
+  }
+
+  for (const tag of Array.from(tagsWithStyle)) {
+    const style = tag.getAttribute('style');
+    if (!style) {
+      continue;
+    }
+    const ast = csstree.parse(style, { context: 'declarationList' });
+    if (config.strictCSSValidation) {
+      pruneProperties(ast);
+    }
+    if (config.imageProxyURL) {
+      parseURLs(ast, config.imageProxyURL);
+    }
+    tag.setAttribute('style', csstree.generate(ast));
+  }
 }
 
 function pruneAtrules(ast: csstree.CssNode) {
