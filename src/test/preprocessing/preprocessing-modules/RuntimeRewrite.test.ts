@@ -1,24 +1,6 @@
 import { module as RuntimeRewrite } from '../../../preprocessing/preprocessing-modules/RuntimeRewrite';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      DOMParser: typeof DOMParser;
-    }
-  }
-}
 
 describe('RuntimeRewrite module', () => {
-  beforeAll(() => {
-    const dom = new JSDOM();
-    global.DOMParser = dom.window.DOMParser;
-  });
-
-  afterAll(() => {
-    delete global.DOMParser;
-  });
-
   test('has correct name', () => {
     expect(RuntimeRewrite.name).toBe('RuntimeRewrite');
   });
