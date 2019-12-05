@@ -4,8 +4,14 @@ describe('BrowserDetection module', () => {
   // tslint:disable:no-any
   const config = {} as any;
 
+  let userAgent: jest.SpyInstance<string, []>;
+
+  beforeAll(() => {
+    userAgent = jest.spyOn(navigator, 'userAgent', 'get');
+  });
+
   afterAll(() => {
-    delete (global as any).window;
+    userAgent.mockClear();
   });
 
   test('has correct name', () => {
@@ -13,24 +19,18 @@ describe('BrowserDetection module', () => {
   });
 
   test('works in supported browser', () => {
-    (global as any).window = {
-      navigator: {
-        userAgent:
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36	',
-      },
-    };
+    userAgent.mockReturnValue(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
+    );
     const code = 'Hello world';
     const out = BrowserDetection.process(code, config);
     expect(out).toBe(code);
   });
 
   test('throws in unsupported browser', () => {
-    (global as any).window = {
-      navigator: {
-        userAgent:
-          'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36',
-      },
-    };
+    userAgent.mockReturnValue(
+      'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+    );
     const code = 'Hello world';
     expect(() => {
       BrowserDetection.process(code, config);
