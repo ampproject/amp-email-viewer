@@ -1,5 +1,6 @@
 import { modules as preprocessingModules } from '../../preprocessing/preprocessing-modules/index';
 import { preprocessAMP } from '../../preprocessing/preprocess';
+import { testdata } from './testdata';
 
 describe('preprocessing', () => {
   const spiedModules: {
@@ -20,15 +21,16 @@ describe('preprocessing', () => {
 
   test('all modules used', async () => {
     // tslint:disable:no-any
-    await preprocessAMP('', {} as any);
+    const out = await preprocessAMP(testdata.hello.input, {} as any);
     for (const name of Object.keys(spiedModules)) {
       expect(spiedModules[name]).toHaveBeenCalled();
     }
+    expect(out).toBe(testdata.hello.output);
   });
 
   test('skips modules from config', async () => {
     // tslint:disable:no-any
-    await preprocessAMP('', {
+    await preprocessAMP(testdata.hello.input, {
       skipPreprocessingModules: ['Validator'],
     } as any);
     for (const name of Object.keys(spiedModules)) {
