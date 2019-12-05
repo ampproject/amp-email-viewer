@@ -50,6 +50,14 @@ export interface Config {
    * Must not be set if rtvPin is set.
    */
   runtimeCDN?: string;
+
+  /**
+   * List of preprocessing modules to skip in the preprocessing step.
+   *
+   * This is useful if e.g. some of the preprocessing like validation is
+   * performed server-side.
+   */
+  skipPreprocessingModules?: string[];
 }
 
 // tslint:disable:no-any
