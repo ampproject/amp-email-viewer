@@ -1,26 +1,8 @@
 import { module as HTMLTag } from '../../../preprocessing/preprocessing-modules/HTMLTag';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      DOMParser: typeof DOMParser;
-    }
-  }
-}
 
 describe('HTMLTag module', () => {
   // tslint:disable:no-any
   const config = {} as any;
-
-  beforeAll(() => {
-    const dom = new JSDOM();
-    global.DOMParser = dom.window.DOMParser;
-  });
-
-  afterAll(() => {
-    delete global.DOMParser;
-  });
 
   test('has correct name', () => {
     expect(HTMLTag.name).toBe('HTMLTag');
