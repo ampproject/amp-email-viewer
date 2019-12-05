@@ -2,26 +2,8 @@ import {
   module as ImageURLRewrite,
   rewriteImageURL,
 } from '../../../preprocessing/preprocessing-modules/ImageURLRewrite';
-import { JSDOM } from 'jsdom';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      DOMParser: typeof DOMParser;
-    }
-  }
-}
 
 describe('ImageURLRewrite module', () => {
-  beforeAll(() => {
-    const dom = new JSDOM();
-    global.DOMParser = dom.window.DOMParser;
-  });
-
-  afterAll(() => {
-    delete global.DOMParser;
-  });
-
   test('rewriteImageURL correctly rewrites URLs', () => {
     const newURL = rewriteImageURL(
       'https://images.example/img.jpg',
