@@ -1,22 +1,64 @@
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import compiler from '@ampproject/rollup-plugin-closure-compiler';
+import json from '@rollup/plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
 const BABEL_PLUGINS = [['@babel/proposal-class-properties']];
 const BABEL_EXCLUDES = 'node_modules/**';
 
-const BABEL_IIFE_PRESETS = [
-  [
-    '@babel/env',
-    {
-      targets: { browsers: ['last 2 versions', 'ie >= 11', 'safari >= 7'] },
-      loose: false,
-      modules: false,
-    },
+const BABEL_PRESETS = {
+  IIFE: [
+    [
+      '@babel/env',
+      {
+        targets: { browsers: ['last 2 versions', 'ie >= 11', 'safari >= 7'] },
+        loose: false,
+        modules: false,
+      },
+    ],
   ],
-];
+  MODULE: [
+    [
+      '@babel/env',
+      {
+        targets: { esmodules: true },
+        loose: true,
+        modules: false,
+      },
+    ],
+  ],
+};
+
+function rollupPlugins(module) {
+  return [
+    resolve(),
+    json(),
+    commonjs({
+      namedExports: {
+        'css-tree': [
+          'clone',
+          'find',
+          'findAll',
+          'findLast',
+          'generate',
+          'keyword',
+          'parse',
+          'property',
+          'walk',
+        ],
+      },
+    }),
+    babel({
+      exclude: BABEL_EXCLUDES,
+      presets: module ? BABEL_PRESETS.MODULE : BABEL_PRESETS.IIFE,
+      plugins: BABEL_PLUGINS,
+    }),
+    compiler(),
+    terser(),
+  ];
+}
 
 const IIFE = {
   input: 'out/index.js',
@@ -26,29 +68,8 @@ const IIFE = {
     sourcemap: true,
     name: 'AMPEmail',
   },
-  plugins: [
-    resolve(),
-    commonjs(),
-    babel({
-      exclude: BABEL_EXCLUDES,
-      presets: BABEL_IIFE_PRESETS,
-      plugins: BABEL_PLUGINS,
-    }),
-    compiler(),
-    terser(),
-  ],
+  plugins: rollupPlugins(false),
 };
-
-const BABEL_MODULE_PRESETS = [
-  [
-    '@babel/env',
-    {
-      targets: { esmodules: true },
-      loose: true,
-      modules: false,
-    },
-  ],
-];
 
 const ESModule = {
   input: 'out/index.js',
@@ -57,17 +78,7 @@ const ESModule = {
     format: 'es',
     sourcemap: true,
   },
-  plugins: [
-    resolve(),
-    commonjs(),
-    babel({
-      exclude: BABEL_EXCLUDES,
-      presets: BABEL_MODULE_PRESETS,
-      plugins: BABEL_PLUGINS,
-    }),
-    compiler(),
-    terser(),
-  ],
+  plugins: rollupPlugins(true),
 };
 
 export default [IIFE, ESModule];
