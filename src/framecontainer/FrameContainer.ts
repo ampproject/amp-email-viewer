@@ -1,8 +1,11 @@
 import { createIframe } from './createIframe';
 import { appendParametersToURL } from './viewerParameters';
 import * as viewerConfig from './viewerConfig';
-import { Messaging } from '@ampproject/viewer-messaging';
-import { modules as renderingModules } from './rendering-modules/index';
+import { Messaging, RequestHandler } from '@ampproject/viewer-messaging';
+import {
+  modules as renderingModules,
+  ModuleInstance,
+} from './rendering-modules/index';
 import { Config } from '../config';
 
 /**
@@ -14,10 +17,11 @@ export class FrameContainer {
   private readonly config: Config;
   private readonly targetOrigin: string;
   private readonly messagingToken: string;
-  private readonly renderingModules: Set<string>;
+  private readonly enabledRenderingModules: Set<string>;
 
   private iframe: HTMLIFrameElement | null = null;
   private messaging: Messaging | null = null;
+  private renderingModules: ModuleInstance[] = [];
 
   /**
    * @param {!HTMLElement} parent Element to create an iframe inside of
@@ -28,7 +32,9 @@ export class FrameContainer {
     this.config = config;
     this.targetOrigin = this.getTargetOrigin();
     this.messagingToken = this.generateMessagingToken();
-    this.renderingModules = new Set(viewerConfig.DEFAULT_RENDERING_MODULES);
+    this.enabledRenderingModules = new Set(
+      viewerConfig.DEFAULT_RENDERING_MODULES
+    );
   }
 
   /**
@@ -41,12 +47,31 @@ export class FrameContainer {
     if (this.iframe) {
       this.parent.removeChild(this.iframe);
       this.iframe = null;
-      this.messaging = null;
+      this.unloadDocument();
     }
 
     this.createViewerIframe();
     await this.injectAMP(amp);
     await this.startMessaging();
+  }
+
+  /**
+   * Unloads the AMP document and displays an error in its place.
+   *
+   * @param {string=} error Information about the error
+   */
+  reportError(error?: string) {
+    if (!this.iframe) {
+      return;
+    }
+
+    this.unloadDocument();
+    let message = 'Error loading AMP page.';
+    if (error) {
+      message += '\n' + error;
+    }
+    this.iframe.src = 'data:text/plain;base64,' + btoa(message);
+    this.iframe.setAttribute('height', '50');
   }
 
   /**
@@ -88,7 +113,7 @@ export class FrameContainer {
    * @param {string} module Name of module to enable
    */
   enableRenderingModule(module: string) {
-    this.renderingModules.add(module);
+    this.enabledRenderingModules.add(module);
   }
 
   /**
@@ -97,7 +122,15 @@ export class FrameContainer {
    * @param {string} module Name of module to disable
    */
   disableRenderingModule(module: string) {
-    this.renderingModules.delete(module);
+    this.enabledRenderingModules.delete(module);
+  }
+
+  private unloadDocument() {
+    this.messaging = null;
+    for (const module of this.renderingModules) {
+      module.documentUnloaded();
+    }
+    this.renderingModules = [];
   }
 
   private createViewerIframe(): void {
@@ -138,14 +171,19 @@ export class FrameContainer {
 
   private loadRenderingModules() {
     for (const module of renderingModules) {
-      if (this.renderingModules.has(module.name)) {
-        module.load(this);
+      if (this.enabledRenderingModules.has(module.name)) {
+        this.renderingModules.push(module.load(this));
       }
     }
   }
 
   private messageHandler = (name: string, data: {}, rsvp: boolean) => {
-    console.log(`Received message: ${name}`);
+    if (name === 'documentLoaded') {
+      for (const module of this.renderingModules) {
+        module.documentLoaded();
+      }
+    }
+    console.log(`Received message: ${name} ${JSON.stringify(data)}`);
     return Promise.resolve();
   };
 
