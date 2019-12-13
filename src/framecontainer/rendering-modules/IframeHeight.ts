@@ -29,11 +29,15 @@ class IframeHeightImpl {
     this.iframe.setAttribute('height', String(data.height));
     return Promise.resolve();
   };
+
+  documentLoaded(): void {}
+  documentUnloaded(): void {}
 }
 
 function load(frameContainer: FrameContainer) {
   const impl = new IframeHeightImpl(frameContainer);
   impl.start();
+  return impl;
 }
 
 export const module = {
