@@ -22,6 +22,7 @@ export class FrameContainer {
   private iframe: HTMLIFrameElement | null = null;
   private messaging: Messaging | null = null;
   private renderingModules: ModuleInstance[] = [];
+  private documentLoadResolver: (() => void) | null = null;
 
   /**
    * @param {!HTMLElement} parent Element to create an iframe inside of
@@ -52,6 +53,7 @@ export class FrameContainer {
 
     this.createViewerIframe();
     await this.injectAMP(amp);
+    this.startLoadingTimer();
     await this.startMessaging();
   }
 
@@ -155,6 +157,19 @@ export class FrameContainer {
     this.iframe!.contentWindow!.postMessage({ amp }, '*');
   }
 
+  private async startLoadingTimer() {
+    try {
+      await new Promise((resolve, reject) => {
+        this.documentLoadResolver = resolve;
+        if (this.config.loadTimeout) {
+          setTimeout(() => reject(), this.config.loadTimeout);
+        }
+      });
+    } catch (e) {
+      this.reportError('Loading timeout');
+    }
+  }
+
   private async startMessaging(): Promise<void> {
     const target = this.iframe!.contentWindow!;
     const messaging = await Messaging.waitForHandshakeFromDocument(
@@ -165,6 +180,7 @@ export class FrameContainer {
     );
     this.messaging = messaging;
     this.messaging.setDefaultHandler(this.messageHandler);
+    this.messaging.registerHandler('documentLoaded', this.documentLoaded);
     this.loadRenderingModules();
     this.messaging.sendRequest('visibilitychange', {}, true);
   }
@@ -178,12 +194,18 @@ export class FrameContainer {
   }
 
   private messageHandler = (name: string, data: {}, rsvp: boolean) => {
-    if (name === 'documentLoaded') {
-      for (const module of this.renderingModules) {
-        module.documentLoaded();
-      }
-    }
     console.log(`Received message: ${name} ${JSON.stringify(data)}`);
+    return Promise.resolve();
+  };
+
+  private documentLoaded = (name: string, data: {}, rsvp: boolean) => {
+    if (this.documentLoadResolver) {
+      this.documentLoadResolver();
+      this.documentLoadResolver = null;
+    }
+    for (const module of this.renderingModules) {
+      module.documentLoaded();
+    }
     return Promise.resolve();
   };
 
