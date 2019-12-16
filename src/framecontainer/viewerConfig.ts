@@ -53,16 +53,17 @@ export const VIEWER_PARAMETERS: ViewerParameters = {
   p2r: false,
   horizontalScrolling: false,
   storage: true,
-  development: false,
+  development: true,
   log: false,
   csi: true,
   cap: [
     ViewerCapability.VIEWER_RENDER_TEMPLATE,
     ViewerCapability.ERROR_REPORTER,
+    ViewerCapability.XHR_INTERCEPTOR,
   ],
 };
 
 /**
  * Rendering modules used by default.
  */
-export const DEFAULT_RENDERING_MODULES = ['IframeHeight', 'ErrorHandler'];
+export const DEFAULT_RENDERING_MODULES = ['IframeHeight', 'XHRProxy', 'ViewerRenderProxy'];
