@@ -21,6 +21,12 @@ This module adds the following attributes to the AMP document's `<html>` tag:
 
 These are used to enable capabilities for the AMP viewer.
 
+## AMP runtime URL rewrite
+
+Rewrites external scripts referencing the AMP runtime hosted on
+`cdn.ampproject.org` to use a different CDN or pin the runtime version,
+depending on the global config.
+
 ## Hyperlink rewrite
 
 Rewrites all hyperlinks (`<a>` tags) to include the following attributes:
