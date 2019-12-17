@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../util';
+import { parseHTML, serializeHTML } from '../../util';
 
 const SCRIPT_SELECTOR = 'script[src]';
 const AMP_CDN_BASE = 'https://cdn.ampproject.org/';

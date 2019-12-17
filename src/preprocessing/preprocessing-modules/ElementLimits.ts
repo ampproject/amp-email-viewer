@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML } from '../util';
+import { parseHTML } from '../../util';
 
 /**
  * Mapping between selector and maximum number of elements matching that

@@ -48,10 +48,11 @@ export function isValidURLWithPlaceholder(url: string): boolean {
 }
 
 /**
- * Rewrites the image URL attribute to use the given proxy URL.
+ * Embeds the given URL into the given proxy URL that contains a placeholder.
  *
- * @param {string} url Image URL to rewrite
+ * @param {string} url URL to embed
  * @param {string} proxy URL of proxy server, with %s as placeholder
+ * @return {string} rewritten URL or empty string if original URL is invalid
  */
 export function rewriteURLUsingPlaceholder(url: string, proxy: string): string {
   if (!isValidURL(url)) {
@@ -62,4 +63,34 @@ export function rewriteURLUsingPlaceholder(url: string, proxy: string): string {
     throw new Error('Invalid proxy URL or no "%s" placeholder found');
   }
   return proxy.replace('%s', encodeURIComponent(url));
+}
+
+/**
+ * Makes a POST request to the given JSON endpoint and returns a parsed JSON
+ * response.
+ *
+ * @param {string} url URL to make a request to
+ * @param {*} data data to include in the body of request (as JSON)
+ * @param {Object=} options additional fetch options to include
+ * @return {Promise<*>} parsed JSON response from server
+ */
+export async function postJSON<In, Out>(
+  url: string,
+  data: In,
+  options: RequestInit = {}
+): Promise<Out> {
+  const opts = Object.assign(
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      redirect: 'error',
+      body: JSON.stringify(data),
+    },
+    options
+  );
+  const response = await fetch(url, opts);
+  return response.json();
 }
