@@ -18,6 +18,9 @@ const BROWSER_REQUIREMENTS = {
   firefox: '>=58',
   opera: '>=48',
   safari: '>=10.1',
+  ios: {
+    safari: '>=10.3',
+  },
 };
 
 /**
