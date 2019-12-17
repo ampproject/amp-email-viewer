@@ -1,0 +1,94 @@
+import { module as XHRProxy } from '../../../framecontainer/rendering-modules/XHRProxy';
+import {
+  ProxyRequest,
+  ProxyResponse,
+} from '../../../framecontainer/rendering-modules/ProxyRequest';
+import * as util from '../../../util';
+
+describe('XHRProxy module', () => {
+  let postJSONOriginal: typeof util.postJSON;
+  let postJSONMock: jest.Mock<Promise<ProxyResponse>, [string, ProxyRequest]>;
+
+  beforeAll(() => {
+    postJSONMock = jest.fn();
+    postJSONOriginal = util.postJSON;
+    // tslint:disable:no-any
+    (util as any).postJSON = postJSONMock;
+  });
+
+  afterAll(() => {
+    // tslint:disable:no-any
+    (util as any).postJSON = postJSONOriginal;
+  });
+
+  test('has correct name', () => {
+    expect(XHRProxy.name).toBe('XHRProxy');
+  });
+
+  test('proxies XHR requests', async () => {
+    const handler = setupXHRProxy({ xhrProxyURL: 'https://proxy.example/' });
+
+    const req = {
+      originalRequest: { input: 'https://endpoint.example/', init: {} },
+    };
+    const res = {
+      body: '{}',
+      init: {},
+    };
+    postJSONMock.mockReturnValueOnce(Promise.resolve(res));
+    const result = await handler('xhr', req, true);
+    expect(result).toBe(res);
+
+    const call = postJSONMock.mock.calls[postJSONMock.mock.calls.length - 1];
+    expect(call[0]).toBe('https://proxy.example/');
+    expect(call[1]).toBe(req);
+  });
+
+  test('uses template proxy', async () => {
+    const handler = setupXHRProxy({
+      templateProxyURL: 'https://templateproxy.example/',
+    });
+    await handler('xhr', {}, true);
+    const call = postJSONMock.mock.calls[postJSONMock.mock.calls.length - 1];
+    expect(call[0]).toBe('https://templateproxy.example/');
+  });
+
+  test('prefers XHR proxy', async () => {
+    const handler = setupXHRProxy({
+      xhrProxyURL: 'https://proxy.example/',
+      templateProxyURL: 'https://templateproxy.example/',
+    });
+    await handler('xhr', {}, true);
+    const call = postJSONMock.mock.calls[postJSONMock.mock.calls.length - 1];
+    expect(call[0]).toBe('https://proxy.example/');
+  });
+
+  test('throws on invalid proxy URL', () => {
+    expect(() => {
+      setupXHRProxy({ xhrProxyURL: 'foo' });
+    }).toThrow();
+  });
+
+  test('no handler registered if proxy URL is not specified', () => {
+    const handler = setupXHRProxy({});
+    expect(handler).toBeNull();
+  });
+});
+
+function setupXHRProxy(config = {}) {
+  const messaging = {
+    registerHandler: jest.fn(),
+  };
+  const frameContainer = {
+    getConfig: () => config,
+    getMessaging: () => messaging,
+  };
+
+  // tslint:disable:no-any
+  XHRProxy.load(frameContainer as any);
+  if (!messaging.registerHandler.mock.calls[0]) {
+    return null;
+  }
+  expect(messaging.registerHandler.mock.calls[0][0]).toBe('xhr');
+  return messaging.registerHandler.mock.calls[0][1];
+}

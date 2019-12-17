@@ -19,6 +19,19 @@ export interface Config {
   imageProxyURL?: string;
 
   /**
+   * URL of the XHR proxy.
+   *
+   * If unset, templateProxyURL is used. If both are unset, XHR requests are not
+   * proxied.
+   */
+  xhrProxyURL?: string;
+
+  /**
+   * URL of the template proxy. If unset, template rendering is not proxied.
+   */
+  templateProxyURL?: string;
+
+  /**
    * URL of the link redirection endpoint. If unset, hyperlinks are not replaced
    * with redirects.
    */

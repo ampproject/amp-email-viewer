@@ -66,4 +66,8 @@ export const VIEWER_PARAMETERS: ViewerParameters = {
 /**
  * Rendering modules used by default.
  */
-export const DEFAULT_RENDERING_MODULES = ['IframeHeight', 'XHRProxy', 'ViewerRenderProxy'];
+export const DEFAULT_RENDERING_MODULES = [
+  'IframeHeight',
+  'XHRProxy',
+  'ViewerRenderProxy',
+];
