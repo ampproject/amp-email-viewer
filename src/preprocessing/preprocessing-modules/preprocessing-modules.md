@@ -20,3 +20,13 @@ This module adds the following attributes to the AMP document's `<html>` tag:
 -   `report-errors-to-viewer`
 
 These are used to enable capabilities for the AMP viewer.
+
+## Size check module
+
+This module checks if the total size of the AMP code (in bytes) is within limits
+defined inside the global config, if set.
+
+## Element limits module
+
+This module ensures the number of AMP elements used inside the email is within
+the limits defined in the standard, per https://github.com/ampproject/wg-amp4email/issues/4
