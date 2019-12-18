@@ -54,6 +54,7 @@
     "node": ">=10.16"
   },
   "dependencies": {
-    "@ampproject/viewer-messaging": "^1.1.0"
+    "@ampproject/viewer-messaging": "^1.1.0",
+    "bowser": "^2.7.0"
   }
 }

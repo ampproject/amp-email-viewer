@@ -89,3 +89,10 @@ defined inside the global config, if set.
 
 This module ensures the number of AMP elements used inside the email is within
 the limits defined in the standard, per https://github.com/ampproject/wg-amp4email/issues/4
+
+## Browser detection module
+
+This module checks if the current browser version is recent enough to support
+important web features required to safely render AMP emails. Because CSP support
+can't be detected using normal feature detection, this module relies on the user
+agent to determine if these features are supported.
