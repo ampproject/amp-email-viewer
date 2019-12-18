@@ -1,5 +1,5 @@
 import { module as CSS } from '../../../preprocessing/preprocessing-modules/CSS';
-import { parseHTML } from '../../../preprocessing/util';
+import { parseHTML } from '../../../util';
 import * as csstree from 'css-tree';
 
 describe('CSS module', () => {
@@ -25,7 +25,7 @@ describe('CSS module', () => {
         @media screen{}
         @media (min-width: 500px) {}
       `,
-      config: { strictCSSValidation: true },
+      config: { strictCSSSanitization: true },
     });
   });
 
@@ -102,7 +102,7 @@ describe('CSS module', () => {
         .good:required {}
         .good:valid {}
       `,
-      config: { strictCSSValidation: true },
+      config: { strictCSSSanitization: true },
     });
   });
 
@@ -126,7 +126,7 @@ describe('CSS module', () => {
         }
         .bad {}
       `,
-      config: { strictCSSValidation: true },
+      config: { strictCSSSanitization: true },
     });
   });
 
@@ -158,7 +158,7 @@ describe('CSS module', () => {
         }
         .bad {}
       `,
-      config: { strictCSSValidation: true },
+      config: { strictCSSSanitization: true },
     });
   });
 
@@ -176,12 +176,12 @@ describe('CSS module', () => {
       `,
       output: `
         .good {
-          background: no-repeat url("https://placeholder.example/");
-          background-image: url("https://placeholder.example/");
+          background: no-repeat url(\"https://proxy.example/image?url=https%3A%2F%2Fimages.example%2Fimg.jpg\");
+          background-image: url(\"https://proxy.example/image?url=https%3A%2F%2Fimages.example%2Fimg.jpg\");
         }
         .bad {}
       `,
-      config: { imageProxyURL: 'https://proxy.example/' },
+      config: { imageProxyURL: 'https://proxy.example/image?url=%s' },
     });
   });
 
@@ -192,12 +192,12 @@ describe('CSS module', () => {
 </body></html>`;
     // tslint:disable:no-any
     const out = CSS.process(input, {
-      imageProxyURL: 'https://proxy.example/',
-      strictCSSValidation: true,
+      imageProxyURL: 'https://proxy.example/image?url=%s',
+      strictCSSSanitization: true,
     } as any);
     expect(out).toBe(`<!DOCTYPE html>
 <html><head></head><body>
-<p style="background-image:url(&quot;https://placeholder.example/&quot;);color:red">Hello</p>
+<p style="background-image:url(&quot;https://proxy.example/image?url=https%3A%2F%2Fimages.example%2Fimg.jpg&quot;);color:red">Hello</p>
 </body></html>`);
   });
 

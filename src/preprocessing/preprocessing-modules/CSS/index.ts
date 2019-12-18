@@ -1,5 +1,10 @@
 import { Config } from '../../../config';
-import { parseHTML, serializeHTML } from '../../util';
+import {
+  parseHTML,
+  serializeHTML,
+  isValidURL,
+  rewriteURLUsingPlaceholder,
+} from '../../../util';
 import * as csstree from 'css-tree';
 import {
   ALLOWED_ATRULES,
@@ -9,11 +14,6 @@ import {
   ALLOWED_URL_PROPERTIES,
   ALLOWED_PROPERTIES,
 } from './whitelist';
-
-// placeholder: use function from ImageProxy module
-function rewriteImageURL(url: string, proxy: string): string {
-  return 'https://placeholder.example/';
-}
 
 const CUSTOM_STYLES_SELECTOR = 'style[amp-custom]';
 const INLINE_STYLES_SELECTOR = '[style]';
@@ -41,7 +41,7 @@ function processStyleTag(doc: HTMLDocument, config: Config) {
   }
 
   const ast = csstree.parse(styleTag.textContent);
-  if (config.strictCSSValidation) {
+  if (config.strictCSSSanitization) {
     pruneAtrules(ast);
     pruneMediaQueries(ast);
     prunePseudoSelectors(ast);
@@ -65,7 +65,7 @@ function processInlineStyles(doc: HTMLDocument, config: Config) {
       continue;
     }
     const ast = csstree.parse(style, { context: 'declarationList' });
-    if (config.strictCSSValidation) {
+    if (config.strictCSSSanitization) {
       pruneProperties(ast);
     }
     if (config.imageProxyURL) {
@@ -191,7 +191,7 @@ function parseURLs(ast: csstree.CssNode, proxy: string) {
             return;
           }
 
-          const newURL = rewriteImageURL(url.href, proxy);
+          const newURL = rewriteURLUsingPlaceholder(url, proxy);
           urlNode.value.value = JSON.stringify(newURL);
         },
       });
@@ -202,18 +202,13 @@ function parseURLs(ast: csstree.CssNode, proxy: string) {
   });
 }
 
-function processURL(url: string): URL | null {
+function processURL(url: string): string | null {
   // strip quotes
   url = url.replace(/^['"]/, '').replace(/['"]$/, '');
-  try {
-    const parsedURL = new URL(url);
-    if (parsedURL.protocol !== 'https:') {
-      return null;
-    }
-    return parsedURL;
-  } catch (_) {
+  if (!isValidURL(url)) {
     return null;
   }
+  return url;
 }
 
 function extractValue(node: csstree.Value | csstree.Raw): string | null {

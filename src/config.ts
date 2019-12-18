@@ -75,7 +75,7 @@ export interface Config {
   /**
    * If set, CSS not abiding by the AMP for Email CSS spec is stripped.
    */
-  strictCSSValidation?: boolean;
+  strictCSSSanitization?: boolean;
 }
 
 // tslint:disable:no-any

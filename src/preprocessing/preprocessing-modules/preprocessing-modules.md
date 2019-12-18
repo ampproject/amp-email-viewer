@@ -118,7 +118,7 @@ The following steps are performed, depending on the configuration:
 
 ### Stripping invalid CSS
 
-*Only if `strictCSSValidation` is set in the config*
+*Only if `strictCSSSanitization` is set in the config*
 
 Removes the CSS properties and rules not conforming with the
 [AMP for Email Supported CSS](https://amp.dev/documentation/guides-and-tutorials/learn/email-spec/amp-email-css/?format=email).
