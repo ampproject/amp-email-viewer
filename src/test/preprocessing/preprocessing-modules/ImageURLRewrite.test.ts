@@ -1,36 +1,6 @@
-import {
-  module as ImageURLRewrite,
-  rewriteImageURL,
-} from '../../../preprocessing/preprocessing-modules/ImageURLRewrite';
+import { module as ImageURLRewrite } from '../../../preprocessing/preprocessing-modules/ImageURLRewrite';
 
 describe('ImageURLRewrite module', () => {
-  test('rewriteImageURL correctly rewrites URLs', () => {
-    const newURL = rewriteImageURL(
-      'https://images.example/img.jpg',
-      'https://proxy.example/image?url=%s'
-    );
-    expect(newURL).toBe(
-      'https://proxy.example/image?url=https%3A%2F%2Fimages.example%2Fimg.jpg'
-    );
-  });
-
-  test('rewriteImageURL returns empty string on invalid input', () => {
-    const newURL = rewriteImageURL(
-      'images.example/img.jpg',
-      'https://proxy.example/image?url=%s'
-    );
-    expect(newURL).toBe('');
-  });
-
-  test('rewriteImageURL throws on invalid proxy', () => {
-    expect(() => {
-      rewriteImageURL(
-        'https://images.example/img.jpg',
-        'https://proxy.example/'
-      );
-    }).toThrow();
-  });
-
   test('replaces image URLs with proxy', () => {
     const code = `<!DOCTYPE html>
 <html amp4email>

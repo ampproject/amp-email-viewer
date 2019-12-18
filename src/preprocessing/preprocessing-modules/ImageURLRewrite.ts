@@ -1,5 +1,9 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../util';
+import {
+  parseHTML,
+  serializeHTML,
+  rewriteURLUsingPlaceholder,
+} from '../../util';
 
 const IMAGE_ELEMENT_SELECTOR = 'amp-img,amp-anim';
 const MUSTACHE_TEMPLATE_REGEX = /^{{\s*[\w\.]+\s*}}$/;
@@ -25,32 +29,12 @@ function process(amp: string, config: Config): string {
     if (!src || src.match(MUSTACHE_TEMPLATE_REGEX)) {
       continue;
     }
-    img.setAttribute('src', rewriteImageURL(src, config.imageProxyURL));
+    img.setAttribute(
+      'src',
+      rewriteURLUsingPlaceholder(src, config.imageProxyURL)
+    );
   }
   return serializeHTML(doc);
-}
-
-/**
- * Rewrites the image URL attribute to use the given proxy URL.
- *
- * @param {string} url Image URL to rewrite
- * @param {string} proxy URL of proxy server, with %s as placeholder
- */
-export function rewriteImageURL(url: string, proxy: string): string {
-  // return empty string if the URL is not valid
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol !== 'https:') {
-      return '';
-    }
-  } catch (e) {
-    return '';
-  }
-
-  if (proxy.indexOf('%s') === -1) {
-    throw new Error('Invalid proxy URL, no placeholder found');
-  }
-  return proxy.replace('%s', encodeURIComponent(url));
 }
 
 export const module = {
