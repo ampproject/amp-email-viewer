@@ -26,6 +26,12 @@ function process(amp: string, config: Config): string {
   const images = doc.querySelectorAll(IMAGE_ELEMENT_SELECTOR);
   for (const img of Array.from(images)) {
     const src = img.getAttribute('src');
+
+    // The validator shouldn't allow this, so this is just a safeguard.
+    if (img.hasAttribute('srcset')) {
+      img.removeAttribute('srcset');
+    }
+
     if (!src || src.match(MUSTACHE_TEMPLATE_REGEX)) {
       continue;
     }
