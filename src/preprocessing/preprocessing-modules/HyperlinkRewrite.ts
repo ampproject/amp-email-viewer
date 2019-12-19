@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../util';
+import { parseHTML, serializeHTML } from '../../util';
 
 const HYPERLINK_SELECTOR = 'a[href]';
 

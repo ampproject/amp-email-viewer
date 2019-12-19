@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../util';
+import { parseHTML, serializeHTML } from '../../util';
 
 const VIEWER_INTEGRATION_SCRIPT =
   'https://cdn.ampproject.org/v0/amp-viewer-integration-0.1.js';
