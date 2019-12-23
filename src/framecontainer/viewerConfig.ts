@@ -56,10 +56,13 @@ export const VIEWER_PARAMETERS: ViewerParameters = {
   development: false,
   log: false,
   csi: true,
-  cap: [ViewerCapability.VIEWER_RENDER_TEMPLATE],
+  cap: [
+    ViewerCapability.VIEWER_RENDER_TEMPLATE,
+    ViewerCapability.ERROR_REPORTER,
+  ],
 };
 
 /**
  * Rendering modules used by default.
  */
-export const DEFAULT_RENDERING_MODULES = ['IframeHeight'];
+export const DEFAULT_RENDERING_MODULES = ['IframeHeight', 'ErrorHandler'];

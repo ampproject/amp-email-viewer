@@ -11,5 +11,6 @@ interface RenderingModule {
 }
 
 import { module as IframeHeight } from './IframeHeight';
+import { module as ErrorHandler } from './ErrorHandler';
 
-export const modules: RenderingModule[] = [IframeHeight];
+export const modules: RenderingModule[] = [IframeHeight, ErrorHandler];
