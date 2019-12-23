@@ -21,5 +21,6 @@ const viewer = new FrameContainer(container, {
   relayPageURL: process.env.CONFIG_RELAY_PAGE_URL,
   useOpaqueOrigin: Boolean(process.env.CONFIG_USE_OPAQUE_ORIGIN),
   imageProxyURL: process.env.CONFIG_IMAGE_PROXY_URL,
+  loadTimeout: 3000,
 });
 viewer.render(window.ampCode);
