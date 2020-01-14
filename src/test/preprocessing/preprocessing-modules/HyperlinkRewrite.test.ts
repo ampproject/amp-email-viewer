@@ -1,4 +1,5 @@
 import { module as HyperlinkRewrite } from '../../../preprocessing/preprocessing-modules/HyperlinkRewrite';
+import { parseHTMLDocument, serializeHTML } from '../../../util';
 
 describe('HyperlinkRewrite module', () => {
   test('has correct name', () => {
@@ -6,18 +7,18 @@ describe('HyperlinkRewrite module', () => {
   });
 
   test('adds hyperlink attributes', () => {
-    const code = `<!DOCTYPE html>
+    const doc = parseHTMLDocument(`<!DOCTYPE html>
 <html amp4email>
 <head></head>
 <body>
 <a href="https://external.example/url">Hello</a>
 <a href="https://external.example/other" target="_top">Hello</a>
 </body>
-</html>`;
+</html>`);
 
     // tslint:disable:no-any
-    const out = HyperlinkRewrite.process(code, {} as any);
-    expect(out).toBe(`<!DOCTYPE html>
+    HyperlinkRewrite.processDocument(doc, {} as any);
+    expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email=""><head></head>
 <body>
 <a href="https://external.example/url" target="_blank" rel="noreferrer noopener">Hello</a>
@@ -27,20 +28,20 @@ describe('HyperlinkRewrite module', () => {
   });
 
   test('adds hyperlink attributes and changes href', () => {
-    const code = `<!DOCTYPE html>
+    const doc = parseHTMLDocument(`<!DOCTYPE html>
 <html amp4email>
 <head></head>
 <body>
 <a href="https://external.example/url">Hello</a>
 <a href="https://external.example/other" target="_top">Hello</a>
 </body>
-</html>`;
+</html>`);
 
     // tslint:disable:no-any
-    const out = HyperlinkRewrite.process(code, {
+    HyperlinkRewrite.processDocument(doc, {
       linkRedirectURL: 'https://redirect.example/goto?url=%s',
     } as any);
-    expect(out).toBe(`<!DOCTYPE html>
+    expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email=""><head></head>
 <body>
 <a href="https://redirect.example/goto?url=https%3A%2F%2Fexternal.example%2Furl" target="_blank" rel="noreferrer noopener" title="https://external.example/url">Hello</a>

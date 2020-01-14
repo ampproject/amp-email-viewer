@@ -4,9 +4,21 @@
  * @param {string} html HTML code to parse
  * @return {!HTMLDocument} DOM tree
  */
-export function parseHTML(html: string): HTMLDocument {
+export function parseHTMLDocument(html: string): HTMLDocument {
   const parser = new DOMParser();
   return parser.parseFromString(html, 'text/html');
+}
+
+/**
+ * Parses the HTML and returns a document fragment.
+ *
+ * @param {string} html HTML code to parse
+ * @return {!DocumentFragment} DOM fragment
+ */
+export function parseHTMLFragment(html: string): DocumentFragment {
+  const template = document.createElement('template');
+  template.innerHTML = html;
+  return template.content;
 }
 
 /**
@@ -15,8 +27,13 @@ export function parseHTML(html: string): HTMLDocument {
  * @param {!HTMLDocument} doc DOM tree to serialize
  * @return {string} HTML code
  */
-export function serializeHTML(doc: HTMLDocument): string {
-  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+export function serializeHTML(doc: HTMLDocument | DocumentFragment): string {
+  if ('documentElement' in doc) {
+    return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  }
+  const div = document.createElement('div');
+  div.appendChild(doc);
+  return div.innerHTML;
 }
 
 /**
@@ -44,7 +61,8 @@ export function isValidURL(url: string): boolean {
  * @return {boolean} true if the URL is valid and contains placeholder
  */
 export function isValidURLWithPlaceholder(url: string): boolean {
-  return isValidURL(url) && url.indexOf('%s') > -1;
+  const placeholders = url.match(/%s/g);
+  return isValidURL(url) && placeholders !== null && placeholders.length === 1;
 }
 
 /**
@@ -62,6 +80,13 @@ export function rewriteURLUsingPlaceholder(url: string, proxy: string): string {
   if (!isValidURLWithPlaceholder(proxy)) {
     throw new Error('Invalid proxy URL or no "%s" placeholder found');
   }
+
+  // Maybe the URL is already rewritten
+  const proxyPrefix = proxy.replace(/%s.*$/, '');
+  if (url.startsWith(proxyPrefix)) {
+    return url;
+  }
+
   return proxy.replace('%s', encodeURIComponent(url));
 }
 

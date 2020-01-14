@@ -1,5 +1,6 @@
 import * as Bowser from 'bowser';
 import { Config } from '../../config';
+import { TextPreprocessingModule } from './index';
 
 /**
  * Based on:
@@ -42,7 +43,7 @@ function process(amp: string, config: Config): string {
   return amp;
 }
 
-export const module = {
+export const module: TextPreprocessingModule = {
   name: 'BrowserDetection',
-  process,
+  processText: process,
 };

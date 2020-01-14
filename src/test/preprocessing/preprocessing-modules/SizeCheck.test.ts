@@ -22,14 +22,14 @@ describe('SizeCheck module', () => {
   test('works with no size limit', () => {
     const code = 'Hello world';
     // tslint:disable:no-any
-    const out = SizeCheck.process(code, {} as any);
+    const out = SizeCheck.processText(code, {} as any);
     expect(out).toBe(code);
   });
 
   test('works when within limit', () => {
     const code = 'Hello world';
     // tslint:disable:no-any
-    const out = SizeCheck.process(code, { maximumAMPSize: 100 } as any);
+    const out = SizeCheck.processText(code, { maximumAMPSize: 100 } as any);
     expect(out).toBe(code);
   });
 
@@ -37,7 +37,7 @@ describe('SizeCheck module', () => {
     const code = 'Hello world';
     expect(() => {
       // tslint:disable:no-any
-      SizeCheck.process(code, { maximumAMPSize: 10 } as any);
+      SizeCheck.processText(code, { maximumAMPSize: 10 } as any);
     }).toThrow();
   });
 });

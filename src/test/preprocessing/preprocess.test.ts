@@ -4,12 +4,18 @@ import { testdata } from './testdata';
 
 describe('preprocessing', () => {
   const spiedModules: {
-    [key: string]: jest.SpyInstance<string | Promise<string>>;
+    [key: string]:
+      | jest.SpyInstance<string | Promise<string>>
+      | jest.SpyInstance<void | Promise<void>>;
   } = {};
 
   beforeEach(() => {
     for (const module of preprocessingModules) {
-      spiedModules[module.name] = jest.spyOn(module, 'process');
+      if ('processText' in module) {
+        spiedModules[module.name] = jest.spyOn(module, 'processText');
+      } else {
+        spiedModules[module.name] = jest.spyOn(module, 'processDocument');
+      }
     }
   });
 

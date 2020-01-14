@@ -44,7 +44,7 @@ describe('BrowserDetection module', () => {
     const code = 'Hello world';
     for (const ua of SUPPORTED_USER_AGENTS) {
       userAgent.mockReturnValue(ua);
-      const out = BrowserDetection.process(code, config);
+      const out = BrowserDetection.processText(code, config);
       expect(out).toBe(code);
     }
   });
@@ -54,7 +54,7 @@ describe('BrowserDetection module', () => {
     for (const ua of UNSUPPORTED_USER_AGENTS) {
       userAgent.mockReturnValue(ua);
       expect(() => {
-        BrowserDetection.process(code, config);
+        BrowserDetection.processText(code, config);
       }).toThrow('Unsupported browser');
     }
   });

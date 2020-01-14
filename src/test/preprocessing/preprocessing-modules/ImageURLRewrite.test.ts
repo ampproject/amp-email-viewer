@@ -1,8 +1,9 @@
 import { module as ImageURLRewrite } from '../../../preprocessing/preprocessing-modules/ImageURLRewrite';
+import { parseHTMLDocument, serializeHTML } from '../../../util';
 
 describe('ImageURLRewrite module', () => {
   test('replaces image URLs with proxy', () => {
-    const code = `<!DOCTYPE html>
+    const doc = parseHTMLDocument(`<!DOCTYPE html>
 <html amp4email>
 <head></head>
 <body>
@@ -10,13 +11,13 @@ Hello, world!
 <amp-img src="https://images.example/img.jpg"></amp-img>
 <amp-anim src="https://images.example/anim.gif"></amp-anim>
 </body>
-</html>`;
+</html>`);
 
     // tslint:disable:no-any
-    const out = ImageURLRewrite.process(code, {
+    ImageURLRewrite.processDocument(doc, {
       imageProxyURL: 'https://proxy.example/image?url=%s',
     } as any);
-    expect(out).toBe(`<!DOCTYPE html>
+    expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email=""><head></head>
 <body>
 Hello, world!
@@ -27,7 +28,7 @@ Hello, world!
   });
 
   test('skips mustache templates', () => {
-    const code = `<!DOCTYPE html>
+    const doc = parseHTMLDocument(`<!DOCTYPE html>
 <html amp4email>
 <head></head>
 <body>
@@ -38,13 +39,13 @@ Hello, world!
   <amp-img src="https://images.example/img.jpg"></amp-img>
 </template>
 </body>
-</html>`;
+</html>`);
 
     // tslint:disable:no-any
-    const out = ImageURLRewrite.process(code, {
+    ImageURLRewrite.processDocument(doc, {
       imageProxyURL: 'https://proxy.example/image?url=%s',
     } as any);
-    expect(out).toBe(`<!DOCTYPE html>
+    expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email=""><head></head>
 <body>
 Hello, world!
@@ -59,17 +60,17 @@ Hello, world!
 
   test('leaves image URLs intact when not configured', () => {
     const code = `<!DOCTYPE html>
-<html amp4email>
-<head></head>
+<html amp4email=""><head></head>
 <body>
 Hello, world!
 <amp-img src="https://images.example/img.jpg"></amp-img>
 <amp-anim src="https://images.example/anim.gif"></amp-anim>
-</body>
-</html>`;
+
+</body></html>`;
+    const doc = parseHTMLDocument(code);
 
     // tslint:disable:no-any
-    const out = ImageURLRewrite.process(code, {} as any);
-    expect(out).toBe(code);
+    ImageURLRewrite.processDocument(doc, {} as any);
+    expect(serializeHTML(doc)).toBe(code);
   });
 });

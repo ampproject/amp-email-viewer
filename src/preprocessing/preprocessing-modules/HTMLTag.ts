@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../../util';
+import { DocumentPreprocessingModule } from './index';
 
 const HTML_ATTRIBUTES = [
   'allow-xhr-interception',
@@ -11,14 +11,11 @@ const HTML_ATTRIBUTES = [
  * Adds attributes to the <html> tag which affect which features are allowed by
  * the AMP viewer.
  *
- * @param {string} amp AMP code to modify <html> tag of
+ * @param {!Document} doc AMP document to modify <html> tag of
  * @param {!Config} config Global config
- * @return {string} Modified AMP code
  */
-function process(amp: string, config: Config): string {
-  const doc = parseHTML(amp);
-
-  const tags = doc.getElementsByTagName('html');
+function process(doc: DocumentFragment, config: Config) {
+  const tags = doc.querySelectorAll('html');
   if (tags.length !== 1) {
     throw new Error('Failed to find <html> tag inside AMP document');
   }
@@ -27,11 +24,9 @@ function process(amp: string, config: Config): string {
   for (const attr of HTML_ATTRIBUTES) {
     html.setAttribute(attr, '');
   }
-
-  return serializeHTML(doc);
 }
 
-export const module = {
+export const module: DocumentPreprocessingModule = {
   name: 'HTMLTag',
-  process,
+  processDocument: process,
 };

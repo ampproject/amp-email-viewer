@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../../util';
+import { DocumentPreprocessingModule } from './index';
 
 const HYPERLINK_SELECTOR = 'a[href]';
 
@@ -7,12 +7,10 @@ const HYPERLINK_SELECTOR = 'a[href]';
  * Rewrites all hypterlinks to use target=_blank and the correct rel. Optionally
  * replaces URLs with redirects, if set in the global config.
  *
- * @param {string} amp AMP code to modify hypterlinks inside
+ * @param {!Document} doc AMP document to modify hypterlinks inside
  * @param {!Config} config Global config
- * @return {string} Modified AMP code
  */
-function process(amp: string, config: Config): string {
-  const doc = parseHTML(amp);
+function process(doc: DocumentFragment, config: Config) {
   const links = doc.querySelectorAll(HYPERLINK_SELECTOR);
   for (const link of Array.from(links)) {
     link.setAttribute('target', '_blank');
@@ -21,7 +19,6 @@ function process(amp: string, config: Config): string {
       rewriteHyperlink(link, config.linkRedirectURL);
     }
   }
-  return serializeHTML(doc);
 }
 
 /**
@@ -43,7 +40,7 @@ function rewriteHyperlink(link: Element, redirect: string): void {
   link.setAttribute('title', url);
 }
 
-export const module = {
+export const module: DocumentPreprocessingModule = {
   name: 'HyperlinkRewrite',
-  process,
+  processDocument: process,
 };

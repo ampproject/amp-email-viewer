@@ -1,5 +1,6 @@
 import { Config } from '../config';
 import { modules as preprocessingModules } from './preprocessing-modules/index';
+import { parseHTMLDocument, serializeHTML } from '../util';
 
 /**
  * Runs the preprocessing modules on the given AMP code.
@@ -14,11 +15,21 @@ export async function preprocessAMP(
   config: Config
 ): Promise<string> {
   const skipSet = new Set(config.skipPreprocessingModules || []);
-  for (const module of preprocessingModules) {
-    if (skipSet.has(module.name)) {
-      continue;
+  const modules = preprocessingModules.filter(
+    module => !skipSet.has(module.name)
+  );
+
+  for (const module of modules) {
+    if ('processText' in module) {
+      amp = await module.processText(amp, config);
     }
-    amp = await module.process(amp, config);
   }
-  return amp;
+
+  const doc = parseHTMLDocument(amp);
+  for (const module of modules) {
+    if ('processDocument' in module) {
+      await module.processDocument(doc, config);
+    }
+  }
+  return serializeHTML(doc);
 }

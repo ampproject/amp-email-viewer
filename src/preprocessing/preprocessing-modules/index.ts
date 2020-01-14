@@ -1,8 +1,20 @@
 import { Config } from '../../config';
 
-interface PreprocessingModule {
+export type PreprocessingModule =
+  | DocumentPreprocessingModule
+  | TextPreprocessingModule;
+
+export interface DocumentPreprocessingModule {
   name: string;
-  process: (amp: string, config: Config) => string | Promise<string>;
+  processDocument: (
+    doc: DocumentFragment,
+    config: Config
+  ) => void | Promise<void>;
+}
+
+export interface TextPreprocessingModule {
+  name: string;
+  processText: (text: string, config: Config) => string | Promise<string>;
 }
 
 import { module as Validator } from './Validator';

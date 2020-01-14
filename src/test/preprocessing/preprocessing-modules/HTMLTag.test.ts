@@ -1,4 +1,5 @@
 import { module as HTMLTag } from '../../../preprocessing/preprocessing-modules/HTMLTag';
+import { parseHTMLDocument, serializeHTML } from '../../../util';
 
 describe('HTMLTag module', () => {
   // tslint:disable:no-any
@@ -9,14 +10,14 @@ describe('HTMLTag module', () => {
   });
 
   test('adds attributes to html tag', () => {
-    const code = `<!DOCTYPE html>
+    const doc = parseHTMLDocument(`<!DOCTYPE html>
 <html amp4email>
 <head></head>
 <body>Hello, world!</body>
-</html>`;
+</html>`);
 
-    const out = HTMLTag.process(code, config);
-    expect(out).toBe(`<!DOCTYPE html>
+    HTMLTag.processDocument(doc, config);
+    expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email="" allow-xhr-interception="" allow-viewer-render-template="" report-errors-to-viewer=""><head></head>
 <body>Hello, world!
 </body></html>`);

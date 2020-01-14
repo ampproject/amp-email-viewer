@@ -1,9 +1,6 @@
 import { Config } from '../../config';
-import {
-  parseHTML,
-  serializeHTML,
-  rewriteURLUsingPlaceholder,
-} from '../../util';
+import { DocumentPreprocessingModule } from './index';
+import { rewriteURLUsingPlaceholder } from '../../util';
 
 const IMAGE_ELEMENT_SELECTOR = 'amp-img,amp-anim';
 const MUSTACHE_TEMPLATE_REGEX = /^{{\s*[\w\.]+\s*}}$/;
@@ -12,17 +9,15 @@ const MUSTACHE_TEMPLATE_REGEX = /^{{\s*[\w\.]+\s*}}$/;
  * Rewrites all images (amp-img and amp-anim) to use the proxy server from the
  * config, if set.
  *
- * @param {string} amp AMP code to modify images inside
+ * @param {!Document} doc AMP document to modify images inside
  * @param {!Config} config Global config
- * @return {string} Modified AMP code
  */
-function process(amp: string, config: Config): string {
+function process(doc: DocumentFragment, config: Config) {
   // Only relevant if image proxying is enabled
   if (!config.imageProxyURL) {
-    return amp;
+    return;
   }
 
-  const doc = parseHTML(amp);
   const images = doc.querySelectorAll(IMAGE_ELEMENT_SELECTOR);
   for (const img of Array.from(images)) {
     const src = img.getAttribute('src');
@@ -40,10 +35,9 @@ function process(amp: string, config: Config): string {
       rewriteURLUsingPlaceholder(src, config.imageProxyURL)
     );
   }
-  return serializeHTML(doc);
 }
 
-export const module = {
+export const module: DocumentPreprocessingModule = {
   name: 'ImageURLRewrite',
-  process,
+  processDocument: process,
 };

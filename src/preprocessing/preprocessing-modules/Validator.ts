@@ -1,5 +1,6 @@
 import { Config } from '../../config';
 import { ValidationResult } from 'amphtml-validator';
+import { TextPreprocessingModule } from './index';
 
 declare global {
   interface Window {
@@ -64,7 +65,7 @@ function findValidatorJS(): HTMLScriptElement | undefined {
   return scripts.find(({ src }) => src === VALIDATOR_JS);
 }
 
-export const module = {
+export const module: TextPreprocessingModule = {
   name: 'Validator',
-  process,
+  processText: process,
 };

@@ -19,7 +19,7 @@ describe('Validator module', () => {
     <body>Hello</body>
     </html>`;
 
-    const out = await Validator.process(code, config);
+    const out = await Validator.processText(code, config);
     expect(out).toBe(code);
   });
 
@@ -37,7 +37,7 @@ describe('Validator module', () => {
     </body>
     </html>`;
 
-    await expect(Validator.process(code, config)).rejects.toThrow(
+    await expect(Validator.processText(code, config)).rejects.toThrow(
       'AMP validation failed'
     );
   });
@@ -55,7 +55,7 @@ describe('Validator module', () => {
     <body>Hello</body>
     </html>`;
 
-    await expect(Validator.process(code, config)).rejects.toThrow(
+    await expect(Validator.processText(code, config)).rejects.toThrow(
       'AMP validation failed'
     );
   });

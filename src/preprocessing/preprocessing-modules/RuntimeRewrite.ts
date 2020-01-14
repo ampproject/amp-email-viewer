@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../../util';
+import { DocumentPreprocessingModule } from './index';
 
 const SCRIPT_SELECTOR = 'script[src]';
 const AMP_CDN_BASE = 'https://cdn.ampproject.org/';
@@ -8,21 +8,18 @@ const AMP_CDN_BASE = 'https://cdn.ampproject.org/';
  * Rewrites all script tags that reference the AMP runtime to use either an RTV
  * pin or a custom CDN, depending on the global config.
  *
- * @param {string} amp AMP code to modify scripts in
+ * @param {!Document} amp AMP document to modify scripts in
  * @param {!Config} config Global config
- * @return {string} Modified AMP code
  */
-function process(amp: string, config: Config): string {
+function process(doc: DocumentFragment, config: Config) {
   if (!config.rtvPin && !config.runtimeCDN) {
-    return amp;
+    return;
   }
 
-  const doc = parseHTML(amp);
   const scripts = doc.querySelectorAll(SCRIPT_SELECTOR);
   for (const script of Array.from(scripts)) {
     rewriteScriptSrc(script, config);
   }
-  return serializeHTML(doc);
 }
 
 /**
@@ -46,7 +43,7 @@ function rewriteScriptSrc(script: Element, config: Config): void {
   script.setAttribute('src', newSrc);
 }
 
-export const module = {
+export const module: DocumentPreprocessingModule = {
   name: 'RuntimeRewrite',
-  process,
+  processDocument: process,
 };

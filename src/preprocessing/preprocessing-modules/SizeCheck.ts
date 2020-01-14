@@ -1,4 +1,5 @@
 import { Config } from '../../config';
+import { TextPreprocessingModule } from './index';
 
 /**
  * Throws if the given code is too large according to the config.
@@ -19,7 +20,7 @@ function process(amp: string, config: Config): string {
   return amp;
 }
 
-export const module = {
+export const module: TextPreprocessingModule = {
   name: 'SizeCheck',
-  process,
+  processText: process,
 };

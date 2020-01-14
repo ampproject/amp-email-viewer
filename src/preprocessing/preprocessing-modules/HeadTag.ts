@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { parseHTML, serializeHTML } from '../../util';
+import { DocumentPreprocessingModule } from './index';
 
 const VIEWER_INTEGRATION_SCRIPT =
   'https://cdn.ampproject.org/v0/amp-viewer-integration-0.1.js';
@@ -33,14 +33,11 @@ const ALLOWED_AMP_ACTIONS = [
  * Adds <meta> tags and the AMP viewer integration script into the <head> tag of
  * the AMP document.
  *
- * @param {string} amp AMP code to modify <head> tag of
+ * @param {!Document} doc AMP document to modify <head> tag of
  * @param {!Config} config Global config
- * @return {string} Modified AMP code
  */
-function process(amp: string, config: Config): string {
-  const doc = parseHTML(amp);
-
-  const tags = doc.getElementsByTagName('head');
+function process(doc: DocumentFragment, config: Config) {
+  const tags = doc.querySelectorAll('head');
   if (tags.length !== 1) {
     throw new Error('Failed to find <head> tag inside AMP document');
   }
@@ -53,8 +50,6 @@ function process(amp: string, config: Config): string {
     createMetaTag('amp-action-whitelist', ALLOWED_AMP_ACTIONS.join(','))
   );
   head.appendChild(createScriptTag(VIEWER_INTEGRATION_SCRIPT));
-
-  return serializeHTML(doc);
 }
 
 /**
@@ -84,7 +79,7 @@ function createScriptTag(src: string): HTMLScriptElement {
   return script;
 }
 
-export const module = {
+export const module: DocumentPreprocessingModule = {
   name: 'HeadTag',
-  process,
+  processDocument: process,
 };
