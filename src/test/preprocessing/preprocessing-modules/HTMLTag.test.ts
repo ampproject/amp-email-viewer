@@ -16,7 +16,7 @@ describe('HTMLTag module', () => {
 <body>Hello, world!</body>
 </html>`);
 
-    HTMLTag.processDocument(doc, config);
+    HTMLTag.transform(doc, config);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email="" allow-xhr-interception="" allow-viewer-render-template="" report-errors-to-viewer=""><head></head>
 <body>Hello, world!

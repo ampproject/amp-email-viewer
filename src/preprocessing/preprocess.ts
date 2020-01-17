@@ -1,5 +1,8 @@
 import { Config } from '../config';
-import { modules as preprocessingModules } from './preprocessing-modules/index';
+import {
+  validationModules,
+  transformingModules,
+} from './preprocessing-modules/index';
 import { parseHTMLDocument, serializeHTML } from '../util';
 
 /**
@@ -15,21 +18,39 @@ export async function preprocessAMP(
   config: Config
 ): Promise<string> {
   const skipSet = new Set(config.skipPreprocessingModules || []);
-  const modules = preprocessingModules.filter(
-    module => !skipSet.has(module.name)
-  );
-
-  for (const module of modules) {
-    if ('processText' in module) {
-      amp = await module.processText(amp, config);
-    }
-  }
-
   const doc = parseHTMLDocument(amp);
-  for (const module of modules) {
-    if ('processDocument' in module) {
-      await module.processDocument(doc, config);
+
+  const errors = [];
+  for (const module of validationModules) {
+    if (skipSet.has(module.name)) {
+      continue;
+    }
+    if (module.validateEnvironment) {
+      const err = await module.validateEnvironment(config);
+      if (err) {
+        throw err;
+      }
+    }
+    if (module.validateText) {
+      const err = await module.validateText(amp, config);
+      if (err) {
+        throw err;
+      }
+    }
+    if (module.validateDocument) {
+      const err = await module.validateDocument(doc, config);
+      if (err) {
+        throw err;
+      }
     }
   }
+
+  for (const module of transformingModules) {
+    if (skipSet.has(module.name)) {
+      continue;
+    }
+    await module.transform(doc, config);
+  }
+
   return serializeHTML(doc);
 }

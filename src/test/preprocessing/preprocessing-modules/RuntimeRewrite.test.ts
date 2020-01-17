@@ -19,7 +19,7 @@ Hello, world!
 </html>`);
 
     // tslint:disable:no-any
-    RuntimeRewrite.processDocument(doc, {
+    RuntimeRewrite.transform(doc, {
       rtvPin: '011911121900560',
     } as any);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
@@ -46,7 +46,7 @@ Hello, world!
 </html>`);
 
     // tslint:disable:no-any
-    RuntimeRewrite.processDocument(doc, {
+    RuntimeRewrite.transform(doc, {
       runtimeCDN: 'https://cdn.example/amp/',
     } as any);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>

@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { DocumentPreprocessingModule } from './index';
+import { TransformingModule } from './index';
 
 const HYPERLINK_SELECTOR = 'a[href]';
 
@@ -10,7 +10,7 @@ const HYPERLINK_SELECTOR = 'a[href]';
  * @param {!Document} doc AMP document to modify hypterlinks inside
  * @param {!Config} config Global config
  */
-function process(doc: DocumentFragment, config: Config) {
+function transform(doc: DocumentFragment, config: Config) {
   const links = doc.querySelectorAll(HYPERLINK_SELECTOR);
   for (const link of Array.from(links)) {
     link.setAttribute('target', '_blank');
@@ -40,7 +40,7 @@ function rewriteHyperlink(link: Element, redirect: string): void {
   link.setAttribute('title', url);
 }
 
-export const module: DocumentPreprocessingModule = {
+export const module: TransformingModule = {
   name: 'HyperlinkRewrite',
-  processDocument: process,
+  transform,
 };

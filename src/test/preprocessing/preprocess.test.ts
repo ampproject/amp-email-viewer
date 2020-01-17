@@ -1,35 +1,53 @@
-import { modules as preprocessingModules } from '../../preprocessing/preprocessing-modules/index';
+import {
+  validationModules,
+  transformingModules,
+} from '../../preprocessing/preprocessing-modules/index';
 import { preprocessAMP } from '../../preprocessing/preprocess';
 import { testdata } from './testdata';
 
 describe('preprocessing', () => {
-  const spiedModules: {
-    [key: string]:
-      | jest.SpyInstance<string | Promise<string>>
-      | jest.SpyInstance<void | Promise<void>>;
+  const spiedTransform: {
+    [key: string]: jest.SpyInstance<void | Promise<void>>;
+  } = {};
+  const spiedValidation: {
+    [key: string]: jest.SpyInstance<Error | null | Promise<Error | null>>;
   } = {};
 
   beforeEach(() => {
-    for (const module of preprocessingModules) {
-      if ('processText' in module) {
-        spiedModules[module.name] = jest.spyOn(module, 'processText');
-      } else {
-        spiedModules[module.name] = jest.spyOn(module, 'processDocument');
+    for (const module of transformingModules) {
+      spiedTransform[module.name] = jest.spyOn(module, 'transform');
+    }
+    for (const module of validationModules) {
+      if ('validateEnvironment' in module) {
+        spiedValidation[module.name] = jest.spyOn(
+          module,
+          'validateEnvironment'
+        );
+      } else if ('validateText' in module) {
+        spiedValidation[module.name] = jest.spyOn(module, 'validateText');
+      } else if ('validateDocument' in module) {
+        spiedValidation[module.name] = jest.spyOn(module, 'validateDocument');
       }
     }
   });
 
   afterEach(() => {
-    for (const name of Object.keys(spiedModules)) {
-      spiedModules[name].mockRestore();
+    for (const method of Object.values(spiedTransform)) {
+      method.mockRestore();
+    }
+    for (const method of Object.values(spiedValidation)) {
+      method.mockRestore();
     }
   });
 
   test('all modules used', async () => {
     // tslint:disable:no-any
     const out = await preprocessAMP(testdata.hello.input, {} as any);
-    for (const name of Object.keys(spiedModules)) {
-      expect(spiedModules[name]).toHaveBeenCalled();
+    for (const method of Object.values(spiedValidation)) {
+      expect(method).toHaveBeenCalled();
+    }
+    for (const method of Object.values(spiedTransform)) {
+      expect(method).toHaveBeenCalled();
     }
     expect(out).toBe(testdata.hello.output);
   });
@@ -37,13 +55,14 @@ describe('preprocessing', () => {
   test('skips modules from config', async () => {
     // tslint:disable:no-any
     await preprocessAMP(testdata.hello.input, {
-      skipPreprocessingModules: ['Validator'],
+      skipPreprocessingModules: ['ValidateAMP'],
     } as any);
-    for (const name of Object.keys(spiedModules)) {
-      if (name === 'Validator') {
-        expect(spiedModules[name]).not.toHaveBeenCalled();
+
+    for (const name of Object.keys(spiedValidation)) {
+      if (name === 'ValidateAMP') {
+        expect(spiedValidation[name]).not.toHaveBeenCalled();
       } else {
-        expect(spiedModules[name]).toHaveBeenCalled();
+        expect(spiedValidation[name]).toHaveBeenCalled();
       }
     }
   });

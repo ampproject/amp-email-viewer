@@ -1,5 +1,4 @@
 import { Config } from '../../config';
-import { DocumentPreprocessingModule } from './index';
 
 /**
  * Mapping between selector and maximum number of elements matching that
@@ -20,16 +19,17 @@ const LIMITS: { [key: string]: number } = {
  * @param {!Document} doc AMP document to check the elements of
  * @param {!Config} config Global config
  */
-function process(doc: DocumentFragment, config: Config) {
+function validateDocument(doc: DocumentFragment, config: Config): Error | null {
   for (const selector of Object.keys(LIMITS)) {
     const elements = doc.querySelectorAll(selector);
     if (elements.length > LIMITS[selector]) {
-      throw new Error('Element limit exceeded');
+      return new Error('Element limit exceeded');
     }
   }
+  return null;
 }
 
-export const module: DocumentPreprocessingModule = {
+export const module = {
   name: 'ElementLimits',
-  processDocument: process,
+  validateDocument,
 };

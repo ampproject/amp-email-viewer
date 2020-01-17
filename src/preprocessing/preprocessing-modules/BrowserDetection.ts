@@ -1,6 +1,5 @@
 import * as Bowser from 'bowser';
 import { Config } from '../../config';
-import { TextPreprocessingModule } from './index';
 
 /**
  * Based on:
@@ -35,15 +34,15 @@ const BROWSER_REQUIREMENTS = {
  * @param {!Config} config Global config (unused)
  * @return {string} AMP code
  */
-function process(amp: string, config: Config): string {
+function validateEnvironment(config: Config): Error | null {
   const browser = Bowser.getParser(window.navigator.userAgent);
   if (!browser.satisfies(BROWSER_REQUIREMENTS)) {
-    throw new Error('Unsupported browser');
+    return new Error('Unsupported browser');
   }
-  return amp;
+  return null;
 }
 
-export const module: TextPreprocessingModule = {
+export const module = {
   name: 'BrowserDetection',
-  processText: process,
+  validateEnvironment,
 };

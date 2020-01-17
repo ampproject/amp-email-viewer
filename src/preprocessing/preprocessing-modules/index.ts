@@ -1,22 +1,20 @@
 import { Config } from '../../config';
 
-export type PreprocessingModule =
-  | DocumentPreprocessingModule
-  | TextPreprocessingModule;
+type OptError = Error | null | Promise<Error | null>;
 
-export interface DocumentPreprocessingModule {
+export interface ValidationModule {
   name: string;
-  processDocument: (
-    doc: DocumentFragment,
-    config: Config
-  ) => void | Promise<void>;
+  validateEnvironment?: (config: Config) => OptError;
+  validateText?: (text: string, config: Config) => OptError;
+  validateDocument?: (doc: DocumentFragment, config: Config) => OptError;
 }
 
-export interface TextPreprocessingModule {
+export interface TransformingModule {
   name: string;
-  processText: (text: string, config: Config) => string | Promise<string>;
+  transform: (doc: DocumentFragment, config: Config) => void | Promise<void>;
 }
 
-import { module as Validator } from './Validator';
+import { module as ValidateAMP } from './ValidateAMP';
 
-export const modules: PreprocessingModule[] = [Validator];
+export const validationModules: ValidationModule[] = [ValidateAMP];
+export const transformingModules: TransformingModule[] = [];

@@ -22,22 +22,21 @@ describe('SizeCheck module', () => {
   test('works with no size limit', () => {
     const code = 'Hello world';
     // tslint:disable:no-any
-    const out = SizeCheck.processText(code, {} as any);
-    expect(out).toBe(code);
+    const err = SizeCheck.validateText(code, {} as any);
+    expect(err).toBeNull();
   });
 
   test('works when within limit', () => {
     const code = 'Hello world';
     // tslint:disable:no-any
-    const out = SizeCheck.processText(code, { maximumAMPSize: 100 } as any);
-    expect(out).toBe(code);
+    const err = SizeCheck.validateText(code, { maximumAMPSize: 100 } as any);
+    expect(err).toBeNull();
   });
 
   test('throws if limit exceeded', () => {
     const code = 'Hello world';
-    expect(() => {
-      // tslint:disable:no-any
-      SizeCheck.processText(code, { maximumAMPSize: 10 } as any);
-    }).toThrow();
+    // tslint:disable:no-any
+    const err = SizeCheck.validateText(code, { maximumAMPSize: 10 } as any);
+    expect(err).not.toBeNull();
   });
 });

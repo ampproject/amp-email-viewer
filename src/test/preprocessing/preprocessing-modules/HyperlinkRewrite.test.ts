@@ -17,7 +17,7 @@ describe('HyperlinkRewrite module', () => {
 </html>`);
 
     // tslint:disable:no-any
-    HyperlinkRewrite.processDocument(doc, {} as any);
+    HyperlinkRewrite.transform(doc, {} as any);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email=""><head></head>
 <body>
@@ -38,7 +38,7 @@ describe('HyperlinkRewrite module', () => {
 </html>`);
 
     // tslint:disable:no-any
-    HyperlinkRewrite.processDocument(doc, {
+    HyperlinkRewrite.transform(doc, {
       linkRedirectURL: 'https://redirect.example/goto?url=%s',
     } as any);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>

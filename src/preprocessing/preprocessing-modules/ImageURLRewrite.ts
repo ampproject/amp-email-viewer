@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { DocumentPreprocessingModule } from './index';
+import { TransformingModule } from './index';
 import { rewriteURLUsingPlaceholder } from '../../util';
 
 const IMAGE_ELEMENT_SELECTOR = 'amp-img,amp-anim';
@@ -12,7 +12,7 @@ const MUSTACHE_TEMPLATE_REGEX = /^{{\s*[\w\.]+\s*}}$/;
  * @param {!Document} doc AMP document to modify images inside
  * @param {!Config} config Global config
  */
-function process(doc: DocumentFragment, config: Config) {
+function transform(doc: DocumentFragment, config: Config) {
   // Only relevant if image proxying is enabled
   if (!config.imageProxyURL) {
     return;
@@ -37,7 +37,7 @@ function process(doc: DocumentFragment, config: Config) {
   }
 }
 
-export const module: DocumentPreprocessingModule = {
+export const module: TransformingModule = {
   name: 'ImageURLRewrite',
-  processDocument: process,
+  transform,
 };

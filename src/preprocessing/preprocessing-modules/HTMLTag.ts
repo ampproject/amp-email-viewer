@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { DocumentPreprocessingModule } from './index';
+import { TransformingModule } from './index';
 
 const HTML_ATTRIBUTES = [
   'allow-xhr-interception',
@@ -14,7 +14,7 @@ const HTML_ATTRIBUTES = [
  * @param {!Document} doc AMP document to modify <html> tag of
  * @param {!Config} config Global config
  */
-function process(doc: DocumentFragment, config: Config) {
+function transform(doc: DocumentFragment, config: Config) {
   const tags = doc.querySelectorAll('html');
   if (tags.length !== 1) {
     throw new Error('Failed to find <html> tag inside AMP document');
@@ -26,7 +26,7 @@ function process(doc: DocumentFragment, config: Config) {
   }
 }
 
-export const module: DocumentPreprocessingModule = {
+export const module: TransformingModule = {
   name: 'HTMLTag',
-  processDocument: process,
+  transform,
 };

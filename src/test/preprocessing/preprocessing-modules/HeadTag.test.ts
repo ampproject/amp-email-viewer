@@ -18,7 +18,7 @@ describe('HeadTag module', () => {
 <body>Hello, world!</body>
 </html>`);
 
-    HeadTag.processDocument(doc, config);
+    HeadTag.transform(doc, config);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
 <html amp4email=""><head>
 <meta name="hello" content="hello,world">

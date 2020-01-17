@@ -1,5 +1,4 @@
 import { Config } from '../../config';
-import { TextPreprocessingModule } from './index';
 
 /**
  * Throws if the given code is too large according to the config.
@@ -8,19 +7,19 @@ import { TextPreprocessingModule } from './index';
  * @param {!Config} config Global config
  * @return {string} AMP code of valid size
  */
-function process(amp: string, config: Config): string {
+function validateText(amp: string, config: Config): Error | null {
   if (!config.maximumAMPSize) {
-    return amp;
+    return null;
   }
   const encoder = new TextEncoder();
   const len = encoder.encode(amp).length;
   if (len > config.maximumAMPSize) {
-    throw new Error('AMP code exceeds maximum allowed size');
+    return new Error('AMP code exceeds maximum allowed size');
   }
-  return amp;
+  return null;
 }
 
-export const module: TextPreprocessingModule = {
+export const module = {
   name: 'SizeCheck',
-  processText: process,
+  validateText,
 };

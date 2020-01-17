@@ -14,7 +14,7 @@ Hello, world!
 </html>`);
 
     // tslint:disable:no-any
-    ImageURLRewrite.processDocument(doc, {
+    ImageURLRewrite.transform(doc, {
       imageProxyURL: 'https://proxy.example/image?url=%s',
     } as any);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
@@ -42,7 +42,7 @@ Hello, world!
 </html>`);
 
     // tslint:disable:no-any
-    ImageURLRewrite.processDocument(doc, {
+    ImageURLRewrite.transform(doc, {
       imageProxyURL: 'https://proxy.example/image?url=%s',
     } as any);
     expect(serializeHTML(doc)).toBe(`<!DOCTYPE html>
@@ -70,7 +70,7 @@ Hello, world!
     const doc = parseHTMLDocument(code);
 
     // tslint:disable:no-any
-    ImageURLRewrite.processDocument(doc, {} as any);
+    ImageURLRewrite.transform(doc, {} as any);
     expect(serializeHTML(doc)).toBe(code);
   });
 });

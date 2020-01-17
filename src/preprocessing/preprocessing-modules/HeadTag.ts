@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { DocumentPreprocessingModule } from './index';
+import { TransformingModule } from './index';
 
 const VIEWER_INTEGRATION_SCRIPT =
   'https://cdn.ampproject.org/v0/amp-viewer-integration-0.1.js';
@@ -36,7 +36,7 @@ const ALLOWED_AMP_ACTIONS = [
  * @param {!Document} doc AMP document to modify <head> tag of
  * @param {!Config} config Global config
  */
-function process(doc: DocumentFragment, config: Config) {
+function transform(doc: DocumentFragment, config: Config) {
   const tags = doc.querySelectorAll('head');
   if (tags.length !== 1) {
     throw new Error('Failed to find <head> tag inside AMP document');
@@ -79,7 +79,7 @@ function createScriptTag(src: string): HTMLScriptElement {
   return script;
 }
 
-export const module: DocumentPreprocessingModule = {
+export const module: TransformingModule = {
   name: 'HeadTag',
-  processDocument: process,
+  transform,
 };

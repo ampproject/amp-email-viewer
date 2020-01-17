@@ -1,5 +1,5 @@
 import { Config } from '../../config';
-import { DocumentPreprocessingModule } from './index';
+import { TransformingModule } from './index';
 
 const SCRIPT_SELECTOR = 'script[src]';
 const AMP_CDN_BASE = 'https://cdn.ampproject.org/';
@@ -11,7 +11,7 @@ const AMP_CDN_BASE = 'https://cdn.ampproject.org/';
  * @param {!Document} amp AMP document to modify scripts in
  * @param {!Config} config Global config
  */
-function process(doc: DocumentFragment, config: Config) {
+function transform(doc: DocumentFragment, config: Config) {
   if (!config.rtvPin && !config.runtimeCDN) {
     return;
   }
@@ -43,7 +43,7 @@ function rewriteScriptSrc(script: Element, config: Config): void {
   script.setAttribute('src', newSrc);
 }
 
-export const module: DocumentPreprocessingModule = {
+export const module: TransformingModule = {
   name: 'RuntimeRewrite',
-  processDocument: process,
+  transform,
 };

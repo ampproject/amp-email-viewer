@@ -1,6 +1,5 @@
 import { Config } from '../../config';
 import { ValidationResult } from 'amphtml-validator';
-import { TextPreprocessingModule } from './index';
 
 declare global {
   interface Window {
@@ -24,14 +23,17 @@ const VALIDATOR_JS = 'https://cdn.ampproject.org/v0/validator.js';
  * @param {!Config} config Global config
  * @return {!Promise<string>} Validated AMP code
  */
-async function process(amp: string, config: Config): Promise<string> {
+async function validateText(
+  amp: string,
+  config: Config
+): Promise<Error | null> {
   const validator = await loadValidator();
   const result = validator.validateString(amp, FORMAT);
   if (result.status !== 'PASS') {
     // TODO: add errors inside this object
-    throw new Error('AMP validation failed');
+    return new Error('AMP validation failed');
   }
-  return amp;
+  return null;
 }
 
 /**
@@ -65,7 +67,7 @@ function findValidatorJS(): HTMLScriptElement | undefined {
   return scripts.find(({ src }) => src === VALIDATOR_JS);
 }
 
-export const module: TextPreprocessingModule = {
-  name: 'Validator',
-  processText: process,
+export const module = {
+  name: 'ValidateAMP',
+  validateText,
 };

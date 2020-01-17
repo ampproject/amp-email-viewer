@@ -15,9 +15,8 @@ describe('SizeCheck module', () => {
     <amp-img></amp-img>
     `);
 
-    const code = serializeHTML(doc);
-    ElementLimits.processDocument(doc, config);
-    expect(serializeHTML(doc)).toBe(code);
+    const err = ElementLimits.validateDocument(doc, config);
+    expect(err).toBeNull();
   });
 
   test('throws if limit exceeded', () => {
@@ -30,8 +29,7 @@ describe('SizeCheck module', () => {
     <amp-state></amp-state>
     <amp-img></amp-img>
     `);
-    expect(() => {
-      ElementLimits.processDocument(doc, config);
-    }).toThrow();
+    const err = ElementLimits.validateDocument(doc, config);
+    expect(err).not.toBeNull();
   });
 });
