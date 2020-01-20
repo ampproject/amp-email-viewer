@@ -1,7 +1,7 @@
 import { createIframe } from './createIframe';
-import { appendParametersToURL } from './viewerParameters';
+import { appendParametersToURL, ViewerCapability } from './viewerParameters';
 import * as viewerConfig from './viewerConfig';
-import { Messaging, RequestHandler } from '@ampproject/viewer-messaging';
+import { Messaging } from '@ampproject/viewer-messaging';
 import {
   modules as renderingModules,
   ModuleInstance,
@@ -23,14 +23,16 @@ export class FrameContainer {
   private messaging: Messaging | null = null;
   private renderingModules: ModuleInstance[] = [];
   private documentLoadResolver: (() => void) | null = null;
+  private senderEmail: string;
 
   /**
    * @param {!HTMLElement} parent Element to create an iframe inside of
    * @param {!Config} config Config with parameters related to the AMP viewer
    */
-  constructor(parent: HTMLElement, config: Config) {
+  constructor(parent: HTMLElement, config: Config, senderEmail: string) {
     this.parent = parent;
     this.config = config;
+    this.senderEmail = senderEmail;
     this.targetOrigin = this.getTargetOrigin();
     this.messagingToken = this.generateMessagingToken();
     this.enabledRenderingModules = new Set(
@@ -107,6 +109,24 @@ export class FrameContainer {
    */
   getConfig(): Config {
     return this.config;
+  }
+
+  /**
+   * Returns the sender email.
+   *
+   * @return {string}
+   */
+  getSenderEmail(): string {
+    return this.senderEmail.toLowerCase();
+  }
+
+  /**
+   * Sets the sender email.
+   *
+   * @param {string} senderEmail New sender email to use
+   */
+  setSenderEmail(senderEmail: string) {
+    this.senderEmail = senderEmail;
   }
 
   /**
@@ -224,6 +244,10 @@ export class FrameContainer {
       },
       viewerConfig.VIEWER_PARAMETERS
     );
+    if (this.config.xhrProxyURL) {
+      params.cap = params.cap || [];
+      params.cap.push(ViewerCapability.XHR_INTERCEPTOR);
+    }
     return appendParametersToURL(this.config.relayPageURL, params);
   }
 

@@ -1,3 +1,5 @@
+import { isValidURL, isValidURLWithPlaceholder } from './util';
+
 /**
  * Global config that defines the behavior of both the viewer and preprocessing.
  */
@@ -17,6 +19,11 @@ export interface Config {
    * URL of the image proxy. If unset, images are not proxied.
    */
   imageProxyURL?: string;
+
+  /**
+   * URL of the XHR proxy. If unset, XHRs are not proxied.
+   */
+  xhrProxyURL?: string;
 
   /**
    * URL of the link redirection endpoint. If unset, hyperlinks are not replaced
@@ -71,16 +78,25 @@ export function validateConfig(config: any): config is Config {
   if (typeof config !== 'object') {
     return false;
   }
-  if (!isURL(config.relayPageURL)) {
+  if (!isValidURL(config.relayPageURL)) {
     return false;
   }
   if (typeof config.useOpaqueOrigin !== 'boolean') {
     return false;
   }
-  if (config.imageProxyURL && !isURL(config.imageProxyURL)) {
+  if (
+    config.imageProxyURL &&
+    !isValidURLWithPlaceholder(config.imageProxyURL)
+  ) {
     return false;
   }
-  if (config.linkRedirectURL && !isURL(config.linkRedirectURL)) {
+  if (config.xhrProxyURL && !isValidURL(config.xhrProxyURL)) {
+    return false;
+  }
+  if (
+    config.linkRedirectURL &&
+    !isValidURLWithPlaceholder(config.linkRedirectURL)
+  ) {
     return false;
   }
 
@@ -90,7 +106,7 @@ export function validateConfig(config: any): config is Config {
   ) {
     return false;
   }
-  if (config.runtimeCDN && !isURL(config.runtimeCDN)) {
+  if (config.runtimeCDN && !isValidURL(config.runtimeCDN)) {
     return false;
   }
   if (
@@ -116,16 +132,6 @@ export function validateConfig(config: any): config is Config {
     config.maximumAMPSize &&
     (typeof config.maximumAMPSize !== 'number' || config.maximumAMPSize < 0)
   ) {
-    return false;
-  }
-  return true;
-}
-
-function isURL(url: string): boolean {
-  try {
-    // tslint:disable:no-unused-expression
-    new URL(url);
-  } catch (_) {
     return false;
   }
   return true;

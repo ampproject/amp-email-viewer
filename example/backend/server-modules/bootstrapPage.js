@@ -9,6 +9,13 @@ const crypto = require('crypto');
 const { HOST_ORIGIN } = process.env;
 
 /**
+ * Host of the CDN that hosts the AMP runtime.
+ *
+ * @const {string}
+ */
+const { CDN_ORIGIN } = process.env;
+
+/**
  * Host of the server that used to proxy images (image proxy module).
  *
  * @const {string}
@@ -37,13 +44,13 @@ const CSP_DIRECTIVES = [
   "base-uri 'none'",
   'block-all-mixed-content',
   'child-src blob:',
-  'connect-src https://cdn.ampproject.org/rtv/',
+  `connect-src ${CDN_ORIGIN}`,
   "default-src 'none'",
   "form-action 'none'",
   `frame-ancestors ${HOST_ORIGIN}`,
   "frame-src 'none'",
   'sandbox allow-forms allow-popups allow-popups-to-escape-sandbox allow-scripts',
-  `script-src ${generateCSPHash(BOOTSTRAP_JS)} https://cdn.ampproject.org`,
+  `script-src ${generateCSPHash(BOOTSTRAP_JS)} ${CDN_ORIGIN}`,
   "style-src 'unsafe-inline'",
   `img-src data: ${IMAGE_PROXY_ORIGIN}`,
   'worker-src blob:',

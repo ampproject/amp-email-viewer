@@ -46,3 +46,12 @@ Where the following need to be replaced:
 The image proxy module proxies images in order to preserve user privacy. Given
 an image URL, it downloads (and optionally caches) the image and then serves it
 to the client.
+
+## XHR proxy
+
+**Requirement level: *RECOMMENDED***
+
+This module proxies XHR requests intercepted by the AMP viewer that are created
+by components like `amp-form` and `amp-list`.
+
+It accepts an object created by the XHR proxy rendering module.
