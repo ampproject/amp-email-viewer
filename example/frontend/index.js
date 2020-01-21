@@ -16,11 +16,13 @@ window.ampCode =
 </html>
 `;
 
-const container = document.querySelector('#viewer');
-const viewer = new FrameContainer(container, {
+window.ampContainerConfig = Object.assign({
   relayPageURL: process.env.CONFIG_RELAY_PAGE_URL,
   useOpaqueOrigin: Boolean(process.env.CONFIG_USE_OPAQUE_ORIGIN),
   imageProxyURL: process.env.CONFIG_IMAGE_PROXY_URL,
   loadTimeout: 3000,
-});
+}, window.ampContainerConfig || {});
+
+const container = document.querySelector('#viewer');
+const viewer = new FrameContainer(container, window.ampContainerConfig, 'sender@example.com');
 viewer.render(window.ampCode);

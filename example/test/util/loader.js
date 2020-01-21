@@ -12,12 +12,13 @@ const RUNTIME_CODE = loadRuntime();
  * @param {string=} code AMP code to inject and render
  * @return {!Object} Whether the content type is accepted
  */
-async function loadAMP(code = '') {
+async function loadAMP(code = '', config = {}) {
   const requests = await interceptRequests(page);
 
-  await page.evaluateOnNewDocument(code => {
+  await page.evaluateOnNewDocument((code, config) => {
     window.ampCode = code;
-  }, code);
+    window.ampContainerConfig = config;
+  }, code, config);
   await page.goto('http://localhost:3000');
   await page.waitForSelector(IFRAME_SELECTOR);
   const iframeElement = await page.$(IFRAME_SELECTOR);
@@ -37,7 +38,10 @@ async function interceptRequests(page) {
   page.removeAllListeners('request');
   page.on('request', req => {
     requests.emit('request', {
-      url: req.url()
+      url: req.url(),
+      method: req.method(),
+      headers: req.headers(),
+      postData: req.postData(),
     });
 
     if (req.url() === RUNTIME_URL) {
