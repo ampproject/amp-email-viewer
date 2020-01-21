@@ -244,9 +244,12 @@ export class FrameContainer {
       },
       viewerConfig.VIEWER_PARAMETERS
     );
+    params.cap = params.cap || [];
     if (this.config.xhrProxyURL) {
-      params.cap = params.cap || [];
       params.cap.push(ViewerCapability.XHR_INTERCEPTOR);
+    }
+    if (this.config.templateProxyURL) {
+      params.cap.push(ViewerCapability.VIEWER_RENDER_TEMPLATE);
     }
     return appendParametersToURL(this.config.relayPageURL, params);
   }

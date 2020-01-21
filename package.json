@@ -59,6 +59,7 @@
   "dependencies": {
     "@ampproject/viewer-messaging": "^1.1.0",
     "bowser": "^2.7.0",
-    "css-tree": "^1.0.0-alpha.39"
+    "css-tree": "^1.0.0-alpha.39",
+    "mustache": "^4.0.0"
   }
 }

@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const EventEmitter = require('events');
 
 const IFRAME_SELECTOR = '#viewer > iframe';
+
 const RUNTIME_URL = 'https://cdn.ampproject.org/v0.js';
 const RUNTIME_CODE = loadRuntime();
 
@@ -16,10 +17,14 @@ async function loadAMP(code = '', config = {}) {
   jest.setTimeout(30000);
   const requests = await interceptRequests(page);
 
-  await page.evaluateOnNewDocument((code, config) => {
-    window.ampCode = code;
-    window.ampContainerConfig = config;
-  }, code, config);
+  await page.evaluateOnNewDocument(
+    (code, config) => {
+      window.ampCode = code;
+      window.ampContainerConfig = config;
+    },
+    code,
+    config
+  );
   await page.goto('http://localhost:3000');
   await page.waitForSelector(IFRAME_SELECTOR);
   const iframeElement = await page.$(IFRAME_SELECTOR);
@@ -28,7 +33,7 @@ async function loadAMP(code = '', config = {}) {
     iframeElement,
     iframe,
     page,
-    requests
+    requests,
   };
 }
 

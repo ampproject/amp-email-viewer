@@ -19,7 +19,7 @@ const AMP_LIST_CODE = `<!DOCTYPE html>
 
 test('XHR interception is used', async () => {
   const { page } = await loadAMP(AMP_LIST_CODE, {
-    xhrProxyURL: process.env.CONFIG_XHR_PROXY_URL,
+    templateProxyURL: null,
   });
   const req = await page.waitForRequest(process.env.CONFIG_XHR_PROXY_URL);
   const originalReq = JSON.parse(req.postData()).originalRequest;
