@@ -44,8 +44,8 @@ describe('BrowserDetection module', () => {
     const code = 'Hello world';
     for (const ua of SUPPORTED_USER_AGENTS) {
       userAgent.mockReturnValue(ua);
-      const out = BrowserDetection.process(code, config);
-      expect(out).toBe(code);
+      const err = BrowserDetection.validateEnvironment(config);
+      expect(err).toBeNull();
     }
   });
 
@@ -53,9 +53,9 @@ describe('BrowserDetection module', () => {
     const code = 'Hello world';
     for (const ua of UNSUPPORTED_USER_AGENTS) {
       userAgent.mockReturnValue(ua);
-      expect(() => {
-        BrowserDetection.process(code, config);
-      }).toThrow('Unsupported browser');
+      const err = BrowserDetection.validateEnvironment(config);
+      expect(err).not.toBeNull();
+      expect(err!.message).toEqual('Unsupported browser');
     }
   });
 });

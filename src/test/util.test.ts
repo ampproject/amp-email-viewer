@@ -1,5 +1,6 @@
 import {
-  parseHTML,
+  parseHTMLDocument,
+  parseHTMLFragment,
   serializeHTML,
   isValidURL,
   isValidURLWithPlaceholder,
@@ -17,16 +18,37 @@ describe('util', () => {
 
 </body></html>`;
 
-  test('parseHTML returns DOM', () => {
-    const parsed = parseHTML(html);
+  const htmlFragment = `
+<img src="something.jpg">
+<div>
+<p data-test="foo">Hello</p>
+Hello
+</div>`;
+
+  test('parseHTMLDocument returns DOM', () => {
+    const parsed = parseHTMLDocument(html);
+    expect(parsed).toBeInstanceOf(Document);
     const body = parsed.querySelector('body');
     expect(body).toBeTruthy();
     expect(body!.getAttribute('data-test')).toBe('foo');
   });
 
-  test('serializeHTML serializes output from parseHTML', () => {
-    const serialized = serializeHTML(parseHTML(html));
+  test('serializeHTML serializes output from parseHTMLDocument', () => {
+    const serialized = serializeHTML(parseHTMLDocument(html));
     expect(serialized).toBe(html);
+  });
+
+  test('parseHTML returns fragment', () => {
+    const parsed = parseHTMLFragment(htmlFragment);
+    expect(parsed).toBeInstanceOf(DocumentFragment);
+    const p = parsed.querySelector('p');
+    expect(p).toBeTruthy();
+    expect(p!.getAttribute('data-test')).toBe('foo');
+  });
+
+  test('serializeHTML serializes output from parseHTMLFragment', () => {
+    const serialized = serializeHTML(parseHTMLFragment(htmlFragment));
+    expect(serialized).toBe(htmlFragment);
   });
 
   test('isValidURL', () => {

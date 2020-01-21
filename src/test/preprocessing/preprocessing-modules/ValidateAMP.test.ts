@@ -1,11 +1,11 @@
-import { module as Validator } from '../../../preprocessing/preprocessing-modules/Validator';
+import { module as ValidateAMP } from '../../../preprocessing/preprocessing-modules/ValidateAMP';
 
-describe('Validator module', () => {
+describe('ValidateAMP module', () => {
   // tslint:disable:no-any
   const config = {} as any;
 
   test('has correct name', () => {
-    expect(Validator.name).toBe('Validator');
+    expect(ValidateAMP.name).toBe('ValidateAMP');
   });
 
   test('works on valid AMP', async () => {
@@ -19,8 +19,8 @@ describe('Validator module', () => {
     <body>Hello</body>
     </html>`;
 
-    const out = await Validator.process(code, config);
-    expect(out).toBe(code);
+    const err = await ValidateAMP.validateText(code, config);
+    expect(err).toBeNull();
   });
 
   test('throws on invalid AMP', async () => {
@@ -37,9 +37,9 @@ describe('Validator module', () => {
     </body>
     </html>`;
 
-    await expect(Validator.process(code, config)).rejects.toThrow(
-      'AMP validation failed'
-    );
+    const err = await ValidateAMP.validateText(code, config);
+    expect(err).not.toBeNull();
+    expect(err!.message).toEqual('AMP validation failed');
   });
 
   test('throws on valid AMP for another format', async () => {
@@ -55,8 +55,8 @@ describe('Validator module', () => {
     <body>Hello</body>
     </html>`;
 
-    await expect(Validator.process(code, config)).rejects.toThrow(
-      'AMP validation failed'
-    );
+    const err = await ValidateAMP.validateText(code, config);
+    expect(err).not.toBeNull();
+    expect(err!.message).toEqual('AMP validation failed');
   });
 });

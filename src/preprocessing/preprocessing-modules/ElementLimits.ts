@@ -1,5 +1,4 @@
 import { Config } from '../../config';
-import { parseHTML } from '../../util';
 
 /**
  * Mapping between selector and maximum number of elements matching that
@@ -17,22 +16,20 @@ const LIMITS: { [key: string]: number } = {
 /**
  * Throws if the given AMP code exceeds the element limits.
  *
- * @param {string} amp AMP code to check the elements of
+ * @param {!Document} doc AMP document to check the elements of
  * @param {!Config} config Global config
- * @return {string} AMP code with valid element counts
  */
-function process(amp: string, config: Config): string {
-  const doc = parseHTML(amp);
+function validateDocument(doc: DocumentFragment, config: Config): Error | null {
   for (const selector of Object.keys(LIMITS)) {
     const elements = doc.querySelectorAll(selector);
     if (elements.length > LIMITS[selector]) {
-      throw new Error('Element limit exceeded');
+      return new Error('Element limit exceeded');
     }
   }
-  return amp;
+  return null;
 }
 
 export const module = {
   name: 'ElementLimits',
-  process,
+  validateDocument,
 };

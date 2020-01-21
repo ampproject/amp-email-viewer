@@ -1,5 +1,9 @@
 import { Config } from '../config';
-import { modules as preprocessingModules } from './preprocessing-modules/index';
+import {
+  validationModules,
+  transformingModules,
+} from './preprocessing-modules/index';
+import { parseHTMLDocument, serializeHTML } from '../util';
 
 /**
  * Runs the preprocessing modules on the given AMP code.
@@ -14,11 +18,39 @@ export async function preprocessAMP(
   config: Config
 ): Promise<string> {
   const skipSet = new Set(config.skipPreprocessingModules || []);
-  for (const module of preprocessingModules) {
+  const doc = parseHTMLDocument(amp);
+
+  const errors = [];
+  for (const module of validationModules) {
     if (skipSet.has(module.name)) {
       continue;
     }
-    amp = await module.process(amp, config);
+    if (module.validateEnvironment) {
+      const err = await module.validateEnvironment(config);
+      if (err) {
+        throw err;
+      }
+    }
+    if (module.validateText) {
+      const err = await module.validateText(amp, config);
+      if (err) {
+        throw err;
+      }
+    }
+    if (module.validateDocument) {
+      const err = await module.validateDocument(doc, config);
+      if (err) {
+        throw err;
+      }
+    }
   }
-  return amp;
+
+  for (const module of transformingModules) {
+    if (skipSet.has(module.name)) {
+      continue;
+    }
+    await module.transform(doc, config);
+  }
+
+  return serializeHTML(doc);
 }

@@ -23,14 +23,17 @@ const VALIDATOR_JS = 'https://cdn.ampproject.org/v0/validator.js';
  * @param {!Config} config Global config
  * @return {!Promise<string>} Validated AMP code
  */
-async function process(amp: string, config: Config): Promise<string> {
+async function validateText(
+  amp: string,
+  config: Config
+): Promise<Error | null> {
   const validator = await loadValidator();
   const result = validator.validateString(amp, FORMAT);
   if (result.status !== 'PASS') {
     // TODO: add errors inside this object
-    throw new Error('AMP validation failed');
+    return new Error('AMP validation failed');
   }
-  return amp;
+  return null;
 }
 
 /**
@@ -65,6 +68,6 @@ function findValidatorJS(): HTMLScriptElement | undefined {
 }
 
 export const module = {
-  name: 'Validator',
-  process,
+  name: 'ValidateAMP',
+  validateText,
 };

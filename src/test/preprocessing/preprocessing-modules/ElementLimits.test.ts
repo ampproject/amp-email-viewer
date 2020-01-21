@@ -1,4 +1,5 @@
 import { module as ElementLimits } from '../../../preprocessing/preprocessing-modules/ElementLimits';
+import { parseHTMLDocument, serializeHTML } from '../../../util';
 
 describe('SizeCheck module', () => {
   // tslint:disable:no-any
@@ -9,17 +10,17 @@ describe('SizeCheck module', () => {
   });
 
   test('works when within limits', () => {
-    const code = `
+    const doc = parseHTMLDocument(`
     <amp-state></amp-state>
     <amp-img></amp-img>
-    `;
+    `);
 
-    const out = ElementLimits.process(code, config);
-    expect(out).toBe(code);
+    const err = ElementLimits.validateDocument(doc, config);
+    expect(err).toBeNull();
   });
 
   test('throws if limit exceeded', () => {
-    const code = `
+    const doc = parseHTMLDocument(`
     <amp-state></amp-state>
     <amp-state></amp-state>
     <amp-state></amp-state>
@@ -27,9 +28,8 @@ describe('SizeCheck module', () => {
     <amp-state></amp-state>
     <amp-state></amp-state>
     <amp-img></amp-img>
-    `;
-    expect(() => {
-      ElementLimits.process(code, config);
-    }).toThrow();
+    `);
+    const err = ElementLimits.validateDocument(doc, config);
+    expect(err).not.toBeNull();
   });
 });
