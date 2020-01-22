@@ -1,10 +1,5 @@
 import { Config } from '../../../config';
-import {
-  parseHTML,
-  serializeHTML,
-  isValidURL,
-  rewriteURLUsingPlaceholder,
-} from '../../../util';
+import { isValidURL, rewriteURLUsingPlaceholder } from '../../../util';
 import * as csstree from 'css-tree';
 import {
   ALLOWED_ATRULES,
@@ -14,6 +9,7 @@ import {
   ALLOWED_URL_PROPERTIES,
   ALLOWED_PROPERTIES,
 } from './whitelist';
+import { TransformingModule } from '../index';
 
 const CUSTOM_STYLES_SELECTOR = 'style[amp-custom]';
 const INLINE_STYLES_SELECTOR = '[style]';
@@ -21,20 +17,15 @@ const INLINE_STYLES_SELECTOR = '[style]';
 /**
  * Parses the CSS of the AMP document.
  *
- * @param {string} amp AMP code to parse CSS of
+ * @param {!Document} doc AMP document parse CSS of
  * @param {!Config} config Global config
- * @return {string} Modified AMP code
  */
-function process(amp: string, config: Config): string {
-  const doc = parseHTML(amp);
-
+function transform(doc: DocumentFragment, config: Config) {
   processStyleTag(doc, config);
   processInlineStyles(doc, config);
-
-  return serializeHTML(doc);
 }
 
-function processStyleTag(doc: HTMLDocument, config: Config) {
+function processStyleTag(doc: DocumentFragment, config: Config) {
   const styleTag = doc.querySelector(CUSTOM_STYLES_SELECTOR);
   if (!styleTag || !styleTag.textContent) {
     return;
@@ -53,7 +44,7 @@ function processStyleTag(doc: HTMLDocument, config: Config) {
   styleTag.textContent = csstree.generate(ast);
 }
 
-function processInlineStyles(doc: HTMLDocument, config: Config) {
+function processInlineStyles(doc: DocumentFragment, config: Config) {
   const tagsWithStyle = doc.querySelectorAll(INLINE_STYLES_SELECTOR);
   if (!tagsWithStyle || tagsWithStyle.length === 0) {
     return;
@@ -230,7 +221,7 @@ function extractValue(node: csstree.Value | csstree.Raw): string | null {
   }
 }
 
-export const module = {
+export const module: TransformingModule = {
   name: 'CSS',
-  process,
+  transform,
 };

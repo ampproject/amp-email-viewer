@@ -1,5 +1,5 @@
 import { module as CSS } from '../../../preprocessing/preprocessing-modules/CSS';
-import { parseHTML } from '../../../util';
+import { parseHTMLFragment, serializeHTML } from '../../../util';
 import * as csstree from 'css-tree';
 
 describe('CSS module', () => {
@@ -186,33 +186,32 @@ describe('CSS module', () => {
   });
 
   test('inline styles', () => {
-    const input = `<!DOCTYPE html>
-<html><head></head><body>
-<p style="background-image: url('https://images.example/img.jpg'); z-index: 1000; color: red; foo: bar">Hello</p>
-</body></html>`;
+    const input = `<p style="background-image: url('https://images.example/img.jpg'); z-index: 1000; color: red; foo: bar">Hello</p>`;
+    const doc = parseHTMLFragment(input);
     // tslint:disable:no-any
-    const out = CSS.process(input, {
+    CSS.transform(doc, {
       imageProxyURL: 'https://proxy.example/image?url=%s',
       strictCSSSanitization: true,
     } as any);
-    expect(out).toBe(`<!DOCTYPE html>
-<html><head></head><body>
-<p style="background-image:url(&quot;https://proxy.example/image?url=https%3A%2F%2Fimages.example%2Fimg.jpg&quot;);color:red">Hello</p>
-</body></html>`);
+
+    expect(serializeHTML(doc)).toBe(
+      `<p style="background-image:url(&quot;https://proxy.example/image?url=https%3A%2F%2Fimages.example%2Fimg.jpg&quot;);color:red">Hello</p>`
+    );
   });
 
   function cssTest({ input = '', output = '', config = {} }) {
+    const doc = parseHTMLFragment(cssToHTML(input));
     // tslint:disable:no-any
-    const out = htmlToCSS(CSS.process(cssToHTML(input), config as any));
-    expect(out).toBe(normalizeCSS(output));
+    CSS.transform(doc, config as any);
+    expect(docToCSS(doc)).toBe(normalizeCSS(output));
   }
 
   function cssToHTML(css: string) {
     return `<style amp-custom>${css}</style>`;
   }
 
-  function htmlToCSS(html: string): string {
-    return parseHTML(html).querySelector('style[amp-custom]')!.textContent!;
+  function docToCSS(doc: DocumentFragment): string {
+    return doc.querySelector('style[amp-custom]')!.textContent!;
   }
 
   function normalizeCSS(css: string): string {
