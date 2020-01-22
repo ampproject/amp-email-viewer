@@ -40,10 +40,10 @@ async function loadAMP(code = '', config = {}) {
 async function interceptRequests(page) {
   const runtimeCode = await RUNTIME_CODE;
   await page.setRequestInterception(true);
-  const requests = new EventEmitter();
+  const requests = [];
   page.removeAllListeners('request');
   page.on('request', req => {
-    requests.emit('request', {
+    requests.push({
       url: req.url(),
       method: req.method(),
       headers: req.headers(),

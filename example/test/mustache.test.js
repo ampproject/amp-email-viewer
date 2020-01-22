@@ -24,22 +24,23 @@ const AMP_LIST_CODE = `<!DOCTYPE html>
 `;
 
 test('Viewer render proxy is used', async () => {
-  const { page, iframe } = await loadAMP(AMP_LIST_CODE);
-  const req = await page.waitForRequest(process.env.CONFIG_TEMPLATE_PROXY_URL);
-  const originalReq = JSON.parse(req.postData()).originalRequest;
+  const { iframe, requests } = await loadAMP(AMP_LIST_CODE);
+  await iframe.waitForSelector('amp-list>div[role=list]>div[role=listitem]');
+  const req = requests.find(
+    req => req.url === process.env.CONFIG_TEMPLATE_PROXY_URL
+  );
+  expect(req).not.toBeUndefined();
+  const originalReq = JSON.parse(req.postData).originalRequest;
   expect(
     originalReq.input.startsWith(
       'https://amp.dev/static/samples/json/cart.json'
     )
   ).toBeTruthy();
-  await iframe.waitForSelector('amp-list > div.i-amphtml-replaced-content p');
   const rendered = await iframe.evaluate(() =>
     document
-      .querySelector('amp-list > div.i-amphtml-replaced-content')
+      .querySelector('amp-list>div[role=list]>div[role=listitem]')
       .innerHTML.replace(/\s+/g, ' ')
       .trim()
   );
-  expect(rendered).toBe(
-    '<div role="listitem" tabindex="0"> <p>Pluot</p> <p>Apple</p> </div>'
-  );
+  expect(rendered).toBe('<p>Pluot</p> <p>Apple</p>');
 });

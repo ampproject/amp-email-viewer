@@ -18,10 +18,18 @@ const AMP_LIST_CODE = `<!DOCTYPE html>
 `;
 
 test('XHR interception is used', async () => {
-  const { page } = await loadAMP(AMP_LIST_CODE, {
+  const { iframe, requests } = await loadAMP(AMP_LIST_CODE, {
     templateProxyURL: null,
   });
-  const req = await page.waitForRequest(process.env.CONFIG_XHR_PROXY_URL);
-  const originalReq = JSON.parse(req.postData()).originalRequest;
-  expect(originalReq.input.startsWith('https://amp.dev/static/samples/json/cart.json')).toBeTruthy();
+  await iframe.waitForSelector('amp-list>div[role=list]>div[role=listitem]');
+  const req = requests.find(
+    req => req.url === process.env.CONFIG_XHR_PROXY_URL
+  );
+  expect(req).not.toBeUndefined();
+  const originalReq = JSON.parse(req.postData).originalRequest;
+  expect(
+    originalReq.input.startsWith(
+      'https://amp.dev/static/samples/json/cart.json'
+    )
+  ).toBeTruthy();
 });
