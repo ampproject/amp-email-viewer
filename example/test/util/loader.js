@@ -13,6 +13,7 @@ const RUNTIME_CODE = loadRuntime();
  * @return {!Object} Whether the content type is accepted
  */
 async function loadAMP(code = '', config = {}) {
+  jest.setTimeout(30000);
   const requests = await interceptRequests(page);
 
   await page.evaluateOnNewDocument((code, config) => {

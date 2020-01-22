@@ -6,7 +6,9 @@ test('AMP runtime loads in iframe', async () => {
 });
 
 test('page loading timeout', async () => {
-  const { iframe } = await loadAMP('not AMP');
+  const { iframe } = await loadAMP('not AMP', {
+    skipPreprocessingModules: ['ValidateAMP']
+  });
   await iframe.waitForSelector('pre');
   const body = await iframe.evaluate(() => document.body.innerText);
   expect(body).toBe('Error loading AMP page.\nLoading timeout');

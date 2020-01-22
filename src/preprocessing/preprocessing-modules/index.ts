@@ -15,6 +15,24 @@ export interface TransformingModule {
 }
 
 import { module as ValidateAMP } from './ValidateAMP';
+import { module as ElementLimits } from './ElementLimits';
+import { module as BrowserDetection } from './BrowserDetection';
+import { module as SizeCheck } from './SizeCheck';
+import { module as HTMLTag } from './HTMLTag';
+import { module as HeadTag } from './HeadTag';
+import { module as RuntimeRewrite } from './RuntimeRewrite';
+import { module as HyperlinkRewrite } from './HyperlinkRewrite';
+import { module as ImageURLRewrite } from './ImageURLRewrite';
 
-export const validationModules: ValidationModule[] = [ValidateAMP];
-export const transformingModules: TransformingModule[] = [];
+export const validationModules: ValidationModule[] = [
+  SizeCheck,
+  ValidateAMP,
+  ElementLimits,
+];
+export const transformingModules: TransformingModule[] = [
+  HTMLTag,
+  HeadTag,
+  RuntimeRewrite,
+  HyperlinkRewrite,
+  ImageURLRewrite,
+];

@@ -13,6 +13,17 @@ describe('preprocessing', () => {
     [key: string]: jest.SpyInstance<Error | null | Promise<Error | null>>;
   } = {};
 
+  let userAgent: jest.SpyInstance<string, []>;
+
+  beforeAll(() => {
+    userAgent = jest.spyOn(navigator, 'userAgent', 'get');
+    userAgent.mockReturnValue('Mozilla/5.0 Chrome/79.0.3945.79');
+  });
+
+  afterAll(() => {
+    userAgent.mockClear();
+  });
+
   beforeEach(() => {
     for (const module of transformingModules) {
       spiedTransform[module.name] = jest.spyOn(module, 'transform');
@@ -55,11 +66,11 @@ describe('preprocessing', () => {
   test('skips modules from config', async () => {
     // tslint:disable:no-any
     await preprocessAMP(testdata.hello.input, {
-      skipPreprocessingModules: ['ValidateAMP'],
+      skipPreprocessingModules: ['ValidateAMP', 'BrowserDetect'],
     } as any);
 
     for (const name of Object.keys(spiedValidation)) {
-      if (name === 'ValidateAMP') {
+      if (name === 'ValidateAMP' || name === 'BrowserDetect') {
         expect(spiedValidation[name]).not.toHaveBeenCalled();
       } else {
         expect(spiedValidation[name]).toHaveBeenCalled();

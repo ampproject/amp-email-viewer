@@ -1,13 +1,12 @@
-import { FrameContainer } from '@ampproject/email-viewer/dist/viewer.mjs';
+import { FrameContainer, preprocessAMP } from '@ampproject/email-viewer/dist/viewer.mjs';
 
 window.ampCode =
   window.ampCode ||
   `<!DOCTYPE html>
-<html ⚡4email allow-xhr-interception allow-viewer-render-template report-errors-to-viewer>
+<html ⚡4email>
 <head>
   <meta charset="utf-8">
   <script async src="https://cdn.ampproject.org/v0.js"></script>
-  <script async src="https://cdn.ampproject.org/v0/amp-viewer-integration-0.1.js"></script>
   <style amp4email-boilerplate>body{visibility:hidden}</style>
 </head>
 <body>
@@ -23,6 +22,11 @@ window.ampContainerConfig = Object.assign({
   loadTimeout: 3000,
 }, window.ampContainerConfig || {});
 
-const container = document.querySelector('#viewer');
-const viewer = new FrameContainer(container, window.ampContainerConfig, 'sender@example.com');
-viewer.render(window.ampCode);
+
+(async function() {
+  const config = window.ampContainerConfig;
+  const container = document.querySelector('#viewer');
+  const viewer = new FrameContainer(container, config, 'sender@example.com');
+  const code = await preprocessAMP(window.ampCode, config);
+  viewer.render(code);
+})();
