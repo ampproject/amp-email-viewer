@@ -6,7 +6,7 @@ import {
   ALLOWED_MEDIA_FEATURES,
   ALLOWED_PSEUDO_CLASS_SELECTORS,
   ALLOWED_TRANSITIONS,
-  ALLOWED_URL_PROPERTIES,
+  ALLOWED_PROPERTIES_WITH_URL,
   ALLOWED_PROPERTIES,
 } from './whitelist';
 import { TransformingModule } from '../index';
@@ -168,7 +168,7 @@ function parseURLs(ast: csstree.CssNode, proxy: string) {
       csstree.walk(node, {
         visit: 'Url',
         enter: urlNode => {
-          if (!ALLOWED_URL_PROPERTIES.has(node.property)) {
+          if (!ALLOWED_PROPERTIES_WITH_URL.has(node.property)) {
             remove = true;
             return;
           }
@@ -195,7 +195,7 @@ function parseURLs(ast: csstree.CssNode, proxy: string) {
 
 function processURL(url: string): string | null {
   // strip quotes
-  url = url.replace(/^['"]/, '').replace(/['"]$/, '');
+  url = url.replace(/^['"]|['"]$/g, '');
   if (!isValidURL(url)) {
     return null;
   }

@@ -55,14 +55,17 @@ export const ALLOWED_TRANSITIONS = new Set([
   'offset-distance',
 ]);
 
-export const ALLOWED_URL_PROPERTIES = new Set([
+export const ALLOWED_PROPERTIES_WITH_URL = new Set([
   'background',
   'background-image',
 ]);
 
 export const ALLOWED_PROPERTIES = new Set([
+  '-webkit-appearance',
+  '-webkit-tap-highlight-color',
   'align-items',
   'align-self',
+  'appearance',
   'azimuth',
   'background',
   'background-attachment',
