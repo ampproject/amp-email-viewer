@@ -23,6 +23,7 @@ import { module as HeadTag } from './HeadTag';
 import { module as RuntimeRewrite } from './RuntimeRewrite';
 import { module as HyperlinkRewrite } from './HyperlinkRewrite';
 import { module as ImageURLRewrite } from './ImageURLRewrite';
+import { module as CSS } from './CSS';
 
 export const validationModules: ValidationModule[] = [
   SizeCheck,
@@ -35,4 +36,5 @@ export const transformingModules: TransformingModule[] = [
   RuntimeRewrite,
   HyperlinkRewrite,
   ImageURLRewrite,
+  CSS,
 ];

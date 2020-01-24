@@ -36,7 +36,9 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.6.3",
+    "@rollup/plugin-json": "^4.0.0",
     "@types/amphtml-validator": "^1.0.1",
+    "@types/css-tree": "^1.0.3",
     "@types/jest": "^24.0.23",
     "gts": "^1.1.0",
     "jest": "^24.9.0",
@@ -44,6 +46,7 @@
     "prettier": "^1.18.2",
     "rollup": "^1.26.0",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.2",
     "ts-jest": "^24.1.0",
@@ -55,6 +58,7 @@
   },
   "dependencies": {
     "@ampproject/viewer-messaging": "^1.1.0",
-    "bowser": "^2.7.0"
+    "bowser": "^2.7.0",
+    "css-tree": "^1.0.0-alpha.39"
   }
 }

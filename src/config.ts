@@ -71,6 +71,11 @@ export interface Config {
    * have.
    */
   maximumAMPSize?: number;
+
+  /**
+   * If set, CSS not abiding by the AMP for Email CSS spec is stripped.
+   */
+  strictCSSSanitization?: boolean;
 }
 
 // tslint:disable:no-any

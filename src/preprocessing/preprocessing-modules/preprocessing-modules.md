@@ -2,8 +2,12 @@
 
 These modules are responsible for processing and validating the AMP code before
 it's displayed inside the viewer.
+<<<<<<< HEAD
 
 ## Validate AMP module
+=======
+## Validator module
+>>>>>>> css module
 
 This module runs the [AMP validator](https://www.npmjs.com/package/amphtml-validator)
 on the AMP code to ensure it's compliant with the requirements for the
@@ -103,3 +107,27 @@ Rewrites all image URLs (`amp-img` and `amp-anim` tags) with URLs of the image
 proxy.
 
 Only active when `imageProxyURL` is set in the global config.
+
+## CSS module
+
+The CSS module parses the user-provided CSS inside the AMP document,
+specifically the stylesheet inside `<style amp-custom>` as well any inline
+styles.
+
+The following steps are performed, depending on the configuration:
+
+### Stripping invalid CSS
+
+*Only if `strictCSSSanitization` is set in the config*
+
+Removes the CSS properties and rules not conforming with the
+[AMP for Email Supported CSS](https://amp.dev/documentation/guides-and-tutorials/learn/email-spec/amp-email-css/?format=email).
+
+### Image proxying
+
+*Only if `imageProxyURL` is set in the config*
+
+Replaces all URLs inside the `url()` function in `background` and
+`background-image` properties to use the image proxy.
+
+All other rules using `url()` are removed.
