@@ -95,7 +95,7 @@ function validateRequest(request) {
 
 function validateResponse(response) {
   const { headers, status } = response;
-  if (!isJSON(headers.get('content-type'))) {
+  if (!isJSONContentType(headers.get('content-type'))) {
     return false;
   }
 
@@ -120,7 +120,7 @@ function validateResponse(response) {
   return true;
 }
 
-function isJSON(contentType) {
+function isJSONContentType(contentType) {
   return contentType.startsWith(JSON_CONTENT_TYPE);
 }
 
