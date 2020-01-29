@@ -11,19 +11,23 @@ const AMP_LIST_CODE = `<!DOCTYPE html>
 </head>
 <body>
   <amp-list layout="fixed-height" height="100" src="https://amp.dev/static/samples/json/cart.json">
-    <template type="amp-mustache"></template>
+    <template type="amp-mustache">
+      <div>
+        {{#cart_items}}
+        <p>{{name}}</p>
+        {{/cart_items}}
+      </div>
+    </template>
   </amp-list>
 </body>
 </html>
 `;
 
-test('XHR interception is used', async () => {
-  const { iframe, requests } = await loadAMP(AMP_LIST_CODE, {
-    templateProxyURL: null,
-  });
+test('Viewer render proxy is used', async () => {
+  const { iframe, requests } = await loadAMP(AMP_LIST_CODE);
   await iframe.waitForSelector('amp-list>div[role=list]>div[role=listitem]');
   const req = requests.find(
-    req => req.url === process.env.CONFIG_XHR_PROXY_URL
+    req => req.url === process.env.CONFIG_TEMPLATE_PROXY_URL
   );
   expect(req).not.toBeUndefined();
   const originalReq = JSON.parse(req.postData).originalRequest;
@@ -32,4 +36,11 @@ test('XHR interception is used', async () => {
       'https://amp.dev/static/samples/json/cart.json'
     )
   ).toBeTruthy();
+  const rendered = await iframe.evaluate(() =>
+    document
+      .querySelector('amp-list>div[role=list]>div[role=listitem]')
+      .innerHTML.replace(/\s+/g, ' ')
+      .trim()
+  );
+  expect(rendered).toBe('<p>Pluot</p> <p>Apple</p>');
 });

@@ -2,10 +2,6 @@ const { loadAMP } = require('./util/loader');
 
 test('AMP iframe uses CSP', async () => {
   const { page, iframe, requests } = await loadAMP();
-  requests.on('request', req => {
-    expect(req.url.startsWith('https://evil.example/')).toBeFalsy();
-  });
-
   await iframe.waitForSelector('html.i-amphtml-iframed');
   await iframe.evaluate(() => {
     const scriptTag = document.createElement('script');
@@ -25,4 +21,7 @@ test('AMP iframe uses CSP', async () => {
     document.body.appendChild(iframeTag);
   });
   await iframe.waitForSelector('img.evil, script.evil, iframe.evil');
+  expect(
+    requests.filter(req => req.url.startsWith('https://evil.example/'))
+  ).toHaveLength(0);
 });

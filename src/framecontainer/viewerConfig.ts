@@ -66,4 +66,5 @@ export const DEFAULT_RENDERING_MODULES = [
   'IframeHeight',
   'ErrorHandler',
   'XHRProxy',
+  'ViewerRenderProxy',
 ];

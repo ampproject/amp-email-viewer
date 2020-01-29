@@ -29,7 +29,7 @@ Hello
     const parsed = parseHTMLDocument(html);
     expect(parsed).toBeInstanceOf(Document);
     const body = parsed.querySelector('body');
-    expect(body).toBeTruthy();
+    expect(body).toBeInstanceOf(HTMLBodyElement);
     expect(body!.getAttribute('data-test')).toBe('foo');
   });
 
@@ -42,7 +42,7 @@ Hello
     const parsed = parseHTMLFragment(htmlFragment);
     expect(parsed).toBeInstanceOf(DocumentFragment);
     const p = parsed.querySelector('p');
-    expect(p).toBeTruthy();
+    expect(p).toBeInstanceOf(HTMLParagraphElement);
     expect(p!.getAttribute('data-test')).toBe('foo');
   });
 
@@ -97,7 +97,7 @@ Hello
     // tslint:disable:no-any
     (window.fetch as any) = mockFn;
     await postJSON('https://example.com/', {});
-    expect(mockFn.mock.calls.length).toBe(1);
+    expect(mockFn.mock.calls).toHaveLength(1);
     expect(mockFn.mock.calls[0][0]).toBe('https://example.com/');
     expect(mockFn.mock.calls[0][1]).toEqual(
       expect.objectContaining({ body: '{}' })

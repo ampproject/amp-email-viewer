@@ -19,6 +19,8 @@ window.ampContainerConfig = Object.assign({
   relayPageURL: process.env.CONFIG_RELAY_PAGE_URL,
   useOpaqueOrigin: Boolean(process.env.CONFIG_USE_OPAQUE_ORIGIN),
   imageProxyURL: process.env.CONFIG_IMAGE_PROXY_URL,
+  xhrProxyURL: process.env.CONFIG_XHR_PROXY_URL,
+  templateProxyURL: process.env.CONFIG_TEMPLATE_PROXY_URL,
   loadTimeout: 3000,
 }, window.ampContainerConfig || {});
 

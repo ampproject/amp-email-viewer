@@ -55,3 +55,17 @@ This module proxies XHR requests intercepted by the AMP viewer that are created
 by components like `amp-form` and `amp-list`.
 
 It accepts an object created by the XHR proxy rendering module.
+
+## Mustache renderer
+
+**Requirement level: *RECOMMENDED***
+
+This module proxies XHR requests intercepted by the AMP viewer that are created
+by components that may contain an `amp-mustache` template, such as `amp-form`
+and `amp-list`.
+
+Unlike the XHR proxy, it also performs server-side rendering for mustache
+templates. This allows it to add additional processing and sanitization before
+the code is added to the email itself.
+
+It accepts an object created by the Viewer render template module.

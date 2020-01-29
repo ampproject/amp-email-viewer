@@ -49,7 +49,7 @@ async function requestWithCORS(req, senderEmail) {
   if (!validateResponse(fetched)) {
     throw new Error('invalid response');
   }
-  return fetched.json();
+  return { status: fetched.status, data: await fetched.json() };
 }
 
 function rewriteURL(urlString, sender) {
@@ -95,10 +95,7 @@ function validateRequest(request) {
 
 function validateResponse(response) {
   const { headers, status } = response;
-  if (status !== 200) {
-    return false;
-  }
-  if (!isJSON(headers.get('content-type'))) {
+  if (!isJSONContentType(headers.get('content-type'))) {
     return false;
   }
 
@@ -123,7 +120,7 @@ function validateResponse(response) {
   return true;
 }
 
-function isJSON(contentType) {
+function isJSONContentType(contentType) {
   return contentType.startsWith(JSON_CONTENT_TYPE);
 }
 

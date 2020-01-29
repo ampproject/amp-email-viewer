@@ -22,8 +22,23 @@ export interface Config {
 
   /**
    * URL of the XHR proxy. If unset, XHRs are not proxied.
+   *
+   * Must be set if templateProxyURL is set.
    */
   xhrProxyURL?: string;
+
+  /**
+   * URL of the template proxy. If unset, template rendering is not proxied.
+   */
+  templateProxyURL?: string;
+
+  /**
+   * Runs some transforming preprocessing modules on the output received from
+   * the template proxy.
+   *
+   * Must be false if templateProxyURL is unset.
+   */
+  transformTemplateProxyOutput?: boolean;
 
   /**
    * URL of the link redirection endpoint. If unset, hyperlinks are not replaced
@@ -96,6 +111,15 @@ export function validateConfig(config: any): config is Config {
     return false;
   }
   if (config.xhrProxyURL && !isValidURL(config.xhrProxyURL)) {
+    return false;
+  }
+  if (!config.xhrProxyURL && config.templateProxyURL) {
+    return false;
+  }
+  if (config.templateProxyURL && !isValidURL(config.templateProxyURL)) {
+    return false;
+  }
+  if (!config.templateProxyURL && config.processTemplateProxyOutput) {
     return false;
   }
   if (
