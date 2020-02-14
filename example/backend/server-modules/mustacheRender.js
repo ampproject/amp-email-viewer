@@ -1,7 +1,7 @@
 const Mustache = require('mustache');
 const { requestWithCORS } = require('../request');
 
-module.exports = async function(req, res, next) {
+module.exports = async function(req, res) {
   const { originalRequest, ampComponent, senderEmail } = req.body;
   const { status, data } = await requestWithCORS(originalRequest, senderEmail);
   const html = renderTemplate(status, ampComponent, data);
