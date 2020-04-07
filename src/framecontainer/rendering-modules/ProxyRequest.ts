@@ -1,7 +1,7 @@
 export interface ProxyRequest {
   originalRequest: {
     input: string;
-    init: RequestInit;
+    init: ProxyInit;
   };
 }
 
@@ -39,4 +39,11 @@ interface AMPComponentList {
 interface Template {
   type: 'amp-mustache';
   payload: string;
+}
+
+interface ProxyInit extends RequestInit {
+  ampCors?: boolean;
+  bypassInterceptorForDev?: boolean;
+  prerenderSafe?: boolean;
+  responseType?: string;
 }

@@ -244,12 +244,15 @@ export class FrameContainer {
       },
       viewerConfig.VIEWER_PARAMETERS
     );
-    params.cap = params.cap || [];
+    params.cap = (params.cap || []).slice();
     if (this.config.xhrProxyURL) {
       params.cap.push(ViewerCapability.XHR_INTERCEPTOR);
     }
     if (this.config.templateProxyURL) {
       params.cap.push(ViewerCapability.VIEWER_RENDER_TEMPLATE);
+    }
+    if (this.config.developmentMode) {
+      params.development = true;
     }
     return appendParametersToURL(this.config.relayPageURL, params);
   }

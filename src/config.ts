@@ -91,6 +91,11 @@ export interface Config {
    * If set, CSS not abiding by the AMP for Email CSS spec is stripped.
    */
   strictCSSSanitization?: boolean;
+
+  /**
+   * Sets the development flag on the AMP runtime.
+   */
+  developmentMode?: boolean;
 }
 
 // tslint:disable:no-any
