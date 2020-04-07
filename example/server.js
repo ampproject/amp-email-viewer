@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'test' ? '.envtest' : '.env'
+});
 const express = require('express');
 const Bundler = require('parcel-bundler');
 const modules = require('./backend/server-modules');

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Builds the AMP runtime locally using the given config.js file.
+
+if ! [ -d repo ]; then
+   git clone --depth=50 https://github.com/ampproject/amphtml.git repo
+fi
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+cd repo
+git clean -X -d -f
+
+cp -f ../config.js src/config.js
+
+# Patch for allowing localhost trusted viewer
+git apply --ignore-whitespace << EOF
+diff --git a/src/service/viewer-impl.js b/src/service/viewer-impl.js
+index 7b112fbdb..a3fcc7afa 100644
+--- a/src/service/viewer-impl.js
++++ b/src/service/viewer-impl.js
+@@ -659,6 +659,9 @@ export class ViewerImpl {
+   isTrustedViewerOrigin_(urlString) {
+     /** @const {!Location} */
+     const url = parseUrlDeprecated(urlString);
++    if (url.hostname === 'localhost') {
++      return true;
++    }
+     const {protocol} = url;
+     // Mobile WebView x-thread is allowed.
+     if (protocol == 'x-thread:') {
+EOF
+
+yarn --frozen-lockfile
+gulp dist
+gulp validator
+cp -f ./validator/dist/validator_minified.js ./dist/v0/validator.js

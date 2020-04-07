@@ -1,6 +1,6 @@
 PORT=3000
 HOST_ORIGIN=http://localhost:3000
-CDN_ORIGIN=http://localhost:3000
+CDN_ORIGIN=https://cdn.ampproject.org
 HOST_URL=http://localhost:3000/tester/index.html
 IMAGE_PROXY_ORIGIN=http://localhost:3000
 CONFIG_RELAY_PAGE_URL=http://localhost:3000/modules/bootstrap-page

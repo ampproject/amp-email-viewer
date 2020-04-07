@@ -1,4 +1,6 @@
 node_modules
-dist
+/dist
+/example/dist
+/example/ampruntime/repo
 out
 .cache

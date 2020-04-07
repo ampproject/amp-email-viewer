@@ -9,6 +9,7 @@ router.get('/bootstrap-page', handler(require('./bootstrapPage')));
 router.get('/link-redirect', handler(require('./linkRedirect')));
 router.post('/xhr-proxy', handler(require('./xhrProxy')));
 router.post('/mustache-render', handler(require('./mustacheRender')));
+router.get('/amp-runtime', handler(require('./ampRuntime')));
 
 function handler(f) {
   return async function(req, res, next) {
