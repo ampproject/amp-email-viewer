@@ -7,8 +7,8 @@ import { Config } from '../../config';
 const TEMPLATE_TRANSFORMING_MODULES = ['HyperlinkRewrite', 'ImageURLRewrite'];
 
 /**
- * Reacts to changes to the AMP document's height and resizes the iframe to
- * adjust to them.
+ * Proxies XHR requests that include mustache template rendering coming from the
+ * AMP runtime.
  */
 class ViewerRenderProxyImpl {
   private readonly proxyURL: string;

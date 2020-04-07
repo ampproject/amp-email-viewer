@@ -39,6 +39,9 @@ function rewriteScriptSrc(script: Element, config: Config): void {
   if (!newBase) {
     newBase = `${AMP_CDN_BASE}rtv/${config.rtvPin}/`;
   }
+  if (newBase.slice(-1) !== '/') {
+    newBase += '/';
+  }
   const newSrc = src.replace(AMP_CDN_BASE, newBase);
   script.setAttribute('src', newSrc);
 }

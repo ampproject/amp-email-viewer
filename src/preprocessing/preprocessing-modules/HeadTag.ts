@@ -43,6 +43,12 @@ function transform(doc: DocumentFragment, config: Config) {
   }
   const head = tags[0];
 
+  head.querySelectorAll('meta').forEach(meta => {
+    if (meta.attributes.length === 1 && meta.attributes[0].name === 'charset') {
+      return;
+    }
+    head.removeChild(meta);
+  });
   head.appendChild(
     createMetaTag('amp-allowed-url-macros', ALLOWED_URL_MACROS.join(','))
   );
