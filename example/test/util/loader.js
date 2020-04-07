@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fetch = require('node-fetch');
 const EventEmitter = require('events');
 
@@ -25,7 +26,7 @@ async function loadAMP(code = '', config = {}) {
     code,
     config
   );
-  await page.goto('http://localhost:3000');
+  await page.goto(process.env.HOST_URL);
   await page.waitForSelector(IFRAME_SELECTOR);
   const iframeElement = await page.$(IFRAME_SELECTOR);
   const iframe = await iframeElement.contentFrame();

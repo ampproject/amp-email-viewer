@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AMP for Email viewer demo</title>
+    <script defer src="./index.js"></script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="./index.css">
+  </head>
+  <body>
+    <div id="viewer"></div>
+    <div class="flex">
+      <div>
+        <textarea id="input"></textarea>
+        <div>
+          <button id="render">Render</button>
+          <fieldset id="config">
+            <legend>Container config</legend>
+          </fieldset>
+        </div>
+      </div>
+      <textarea id="processed" readonly></textarea>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#viewer {
+  overflow-y: scroll;
+  resize: vertical;
+  max-height: 500px;
+  margin-bottom: 2em;
+}
+
+#viewer > iframe {
+  outline: 1px dotted grey;
+}
+
+#viewer:not(:empty)::before {
+  content: 'Email preview';
+  display: block;
+  margin-bottom: 1em;
+}
+
+textarea {
+  font-family: monospace;
+  resize: vertical;
+}
+
+#input {
+  width: 100%;
+  min-height: 300px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex > * {
+  flex-grow: 1;
+}
+
+.flex > * + * {
+  margin-left: 2em;
+}
+
+#render {
+  display: block;
+  height: 3em;
+  margin: 2em 0;
+  width: 100%;
+}
+
+#config.invalid legend::after {
+  content: ' (INVALID)';
+  color: red;
+}
+
+#config p > label {
+  display: flex;
+}
+
+#config p input[type=text] {
+  flex-grow: 1;
+  width: 0;
+}
+
+.error {
+  color: red;
+}

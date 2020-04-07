@@ -1,15 +1,18 @@
 require('dotenv').config({
-  path: process.env.NODE_ENV === 'test' ? '.envtest' : '.env'
+  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
 });
 const express = require('express');
 const Bundler = require('parcel-bundler');
 const modules = require('./backend/server-modules');
 
-/** @const {string} */
-const PARCEL_ENTRY_POINT = 'frontend/index.html';
+/** @const {Array<string>} */
+const PARCEL_ENTRY_POINTS = [
+  'frontend/tester/index.html',
+  'frontend/demo/index.html',
+];
 
 /** @const {Object} */
-const DEFAULT_PARCEL_OPTIONS = {
+const PARCEL_DEFAULT_OPTIONS = {
   autoInstall: false,
 };
 
@@ -21,15 +24,14 @@ const DEFAULT_PARCEL_OPTIONS = {
  * @return {!Promise<http.Server>} Resolves when the server starts
  */
 async function start(port, { hostname, parcelOptions = {} } = {}) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const app = express();
 
-    const options = Object.assign({}, DEFAULT_PARCEL_OPTIONS, parcelOptions);
-    const bundler = new Bundler(PARCEL_ENTRY_POINT, options);
+    const options = Object.assign({}, PARCEL_DEFAULT_OPTIONS, parcelOptions);
 
     app.use('/modules', modules);
 
-    app.use(bundler.middleware());
+    app.use(new Bundler(PARCEL_ENTRY_POINTS, options).middleware());
 
     const server = app.listen(port, hostname, () => resolve(server));
   });
