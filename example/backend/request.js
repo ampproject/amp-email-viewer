@@ -89,12 +89,15 @@ function validateRequest(request) {
   if (!ALLOWED_METHODS.has(request.init.method.toUpperCase())) {
     return false;
   }
+  if (request.init.headers['Accept'] !== JSON_CONTENT_TYPE) {
+    return false;
+  }
 
   return true;
 }
 
 function validateResponse(response) {
-  const { headers, status } = response;
+  const { headers } = response;
   if (!isJSONContentType(headers.get('content-type'))) {
     return false;
   }
@@ -102,7 +105,7 @@ function validateResponse(response) {
   const exposedHeaders = headers
     .get('access-control-expose-headers')
     .split(',')
-    .map(header => header.trim().toLowerCase());
+    .map((header) => header.trim().toLowerCase());
   if (!exposedHeaders.includes('amp-access-control-allow-source-origin')) {
     return false;
   }
@@ -112,7 +115,9 @@ function validateResponse(response) {
 
   const url = new URL(response.url);
   const sender = url.searchParams.get(AMP_SOURCE_ORIGIN_PARAMETER);
-  const allowedSender = response.headers.get('amp-access-control-allow-source-origin');
+  const allowedSender = response.headers.get(
+    'amp-access-control-allow-source-origin'
+  );
   if (sender.toLowerCase() !== allowedSender.toLowerCase()) {
     return false;
   }
