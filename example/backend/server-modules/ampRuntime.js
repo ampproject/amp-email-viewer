@@ -10,9 +10,7 @@ module.exports = (req, res) => {
     res.status(404);
     throw new Error('AMP runtime not built');
   }
-  const {pathname} = url.parse(req.originalUrl);
-  const match = pathname.match(/(v0|ww).*\.js$/);
-  const file = match ? path.join(RUNTIME_DIST, match[0]) : null;
+  const file = parsePath(req.originalUrl);
   if (!file || !fs.existsSync(file)) {
     res.status(404);
     throw new Error('file not found');
@@ -21,3 +19,16 @@ module.exports = (req, res) => {
   res.setHeader('access-control-allow-origin', '*');
   res.sendFile(file, { root: '.' });
 };
+
+function parsePath(inputUrl) {
+  const {pathname} = url.parse(inputUrl);
+  const match = pathname.match(/(v0|ww).*\.js$/);
+  if (!match) {
+    return null;
+  }
+  const segment = path.normalize(match[0]);
+  if (segment.startsWith('.')) {
+    return null;
+  }
+  return path.join(RUNTIME_DIST, segment);
+}

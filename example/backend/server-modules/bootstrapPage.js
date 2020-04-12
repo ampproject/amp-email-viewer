@@ -23,6 +23,13 @@ const { CDN_ORIGIN } = process.env;
 const { IMAGE_PROXY_ORIGIN } = process.env;
 
 /**
+ * Allows disabling sending of the CSP header.
+ *
+ * Dangerous, only use for testing.
+ */
+const ALLOW_DISABLE_CSP = Boolean(process.env.ALLOW_DISABLE_CSP);
+
+/**
  * JS source code of the bootstrap page.
  *
  * @const {string}
@@ -56,8 +63,14 @@ const CSP_DIRECTIVES = [
   'worker-src blob:',
 ];
 
-module.exports = async function(req, res) {
-  res.set('Content-Security-Policy', CSP_DIRECTIVES.join(';'));
+module.exports = async function (req, res) {
+  if (ALLOW_DISABLE_CSP && 'disableCSP' in req.query) {
+    console.warn(
+      "CSP headers disabled. Make sure you're not doing this in production."
+    );
+  } else {
+    res.set('Content-Security-Policy', CSP_DIRECTIVES.join(';'));
+  }
   res.send(BOOTSTRAP_HTML);
 };
 

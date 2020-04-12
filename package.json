@@ -12,7 +12,7 @@
   "scripts": {
     "build": "npm run compile && npm run rollup",
     "rollup": "rollup -c",
-    "server": "npm run build && cd example && node index.js",
+    "server": "npm run build && cd example && env NODE_ENV=production node index.js",
     "test:server": "cd example && npm test",
     "test:unit": "jest",
     "test": "npm run test:unit && npm run test:server",
