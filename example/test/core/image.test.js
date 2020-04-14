@@ -1,4 +1,4 @@
-const { loadAMP } = require('./util/loader');
+const { loadAMP } = require('../util/loader');
 
 const AMP_IMG_CODE = `<!DOCTYPE html>
 <html ⚡4email>

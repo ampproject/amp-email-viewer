@@ -1,4 +1,4 @@
-const { loadAMP } = require('./util/loader');
+const { loadAMP } = require('../util/loader');
 
 test('AMP iframe uses CSP', async () => {
   const { page, iframe, requests } = await loadAMP();
