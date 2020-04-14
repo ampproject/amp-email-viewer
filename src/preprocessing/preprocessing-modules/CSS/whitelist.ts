@@ -61,8 +61,10 @@ export const ALLOWED_PROPERTIES_WITH_URL = new Set([
 ]);
 
 export const ALLOWED_PROPERTIES = new Set([
+  '-moz-appearance',
   '-webkit-appearance',
   '-webkit-tap-highlight-color',
+  'align-content',
   'align-items',
   'align-self',
   'appearance',
@@ -158,6 +160,7 @@ export const ALLOWED_PROPERTIES = new Set([
   'font-variant-numeric',
   'font-variation-settings',
   'font-weight',
+  'gap',
   'grid',
   'grid-area',
   'grid-auto-columns',
@@ -231,6 +234,7 @@ export const ALLOWED_PROPERTIES = new Set([
   'resize',
   'richness',
   'right',
+  'row-gap',
   'speak',
   'speak-header',
   'speak-numeral',
