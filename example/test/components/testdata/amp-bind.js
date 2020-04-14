@@ -1,6 +1,8 @@
-const { loadAMP } = require('./util/loader');
-
-const AMP_BIND_CODE = `<!DOCTYPE html>
+module.exports = {
+  name: 'amp-bind',
+  clickSelector: 'button',
+  success: '#output.clicked',
+  code: `<!DOCTYPE html>
 <html ⚡4email>
 <head>
   <meta charset="utf-8">
@@ -13,12 +15,5 @@ const AMP_BIND_CODE = `<!DOCTYPE html>
   <div id="output" [class]="state || ''"></div>
 </body>
 </html>
-`;
-
-test('amp-bind works correctly', async () => {
-  const { page, iframe } = await loadAMP(AMP_BIND_CODE);
-  const button = await iframe.$('button');
-  expect(await iframe.$eval('#output', (output) => output.className)).toBe('');
-  await button.click();
-  await iframe.waitForSelector('#output.clicked');
-});
+`
+}

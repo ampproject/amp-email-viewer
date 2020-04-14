@@ -1,4 +1,4 @@
-const { loadAMP } = require('./util/loader');
+const { loadAMP } = require('../util/loader');
 
 describe('AMP loading', () => {
   test('runtime loads in iframe', async () => {
