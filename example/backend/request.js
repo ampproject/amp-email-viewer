@@ -65,7 +65,7 @@ function fetchParamsFromInit(init) {
   headers.set('origin', HOST_ORIGIN);
   return {
     method: init.method,
-    body: init.body,
+    body: init.body ? new URLSearchParams(init.body) : null,
     headers,
     redirect: 'error',
     credentials: 'omit',

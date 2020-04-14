@@ -4,7 +4,11 @@ import { parseHTMLFragment, serializeHTML, postJSON } from '../../util';
 import { transformingModules } from '../../preprocessing/preprocessing-modules/index';
 import { Config } from '../../config';
 
-const TEMPLATE_TRANSFORMING_MODULES = ['HyperlinkRewrite', 'ImageURLRewrite'];
+const TEMPLATE_TRANSFORMING_MODULES = [
+  'CSS',
+  'HyperlinkRewrite',
+  'ImageURLRewrite',
+];
 
 /**
  * Proxies XHR requests that include mustache template rendering coming from the

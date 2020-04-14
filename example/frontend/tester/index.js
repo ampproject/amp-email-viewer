@@ -25,6 +25,7 @@ window.ampContainerConfig = Object.assign(
     imageProxyURL: process.env.CONFIG_IMAGE_PROXY_URL,
     xhrProxyURL: process.env.CONFIG_XHR_PROXY_URL,
     templateProxyURL: process.env.CONFIG_TEMPLATE_PROXY_URL,
+    transformTemplateProxyOutput: true,
     linkRedirectURL: process.env.CONFIG_LINK_REDIRECT_URL,
     loadTimeout: 3000,
   },
