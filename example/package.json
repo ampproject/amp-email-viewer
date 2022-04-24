@@ -17,7 +17,7 @@
   "devDependencies": {
     "jest": "^25.2.0",
     "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^2.1.1"
+    "puppeteer": "13.6.0"
   },
   "//": "To make it easier to run Puppeteer without needing regeneratorRuntime",
   "browserslist": [
