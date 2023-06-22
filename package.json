@@ -32,7 +32,7 @@
     "url": "https://github.com/ampproject/amp-email-viewer.git"
   },
   "devDependencies": {
-    "@ampproject/rollup-plugin-closure-compiler": "^0.24.0",
+    "@ampproject/rollup-plugin-closure-compiler": "^0.27.0",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
