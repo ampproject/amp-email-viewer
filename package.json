@@ -38,7 +38,7 @@
     "@babel/preset-env": "^7.9.0",
     "@rollup/plugin-json": "^4.0.2",
     "@types/amphtml-validator": "^1.0.1",
-    "@types/css-tree": "^1.0.3",
+    "@types/css-tree": "^2.0.0",
     "@types/jest": "^25.1.4",
     "gts": "^1.1.2",
     "jest": "^25.2.0",
